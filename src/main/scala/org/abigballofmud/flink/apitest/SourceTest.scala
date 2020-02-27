@@ -1,11 +1,7 @@
 package org.abigballofmud.flink.apitest
 
-import java.util.Properties
-
-import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaConsumerBase}
 
 import scala.collection.immutable
 import scala.util.Random
@@ -80,7 +76,7 @@ class SensorSource() extends SourceFunction[SensorReading] {
   override def run(ctx: SourceFunction.SourceContext[SensorReading]): Unit = {
     val random: Random = new Random()
     // 初始化定义一组传感器温度数据
-    var curTemp: immutable.IndexedSeq[(String, Double)] = 1.to(10).map(
+    var curTemp: immutable.IndexedSeq[(String, Double)] = 1.to(100000).map(
       i => ("sensor_" + i, 60 + random.nextGaussian() * 20)
     )
     // 产生数据
