@@ -2,11 +2,13 @@
   "syncFlink": {
     "jobName": "flink_mysql_realtime_sync",
     "sourceSchema": "hdsp_test",
-    "sourceTable": "dev_common_test"
+    "sourceTable": "dev_common_test",
+    "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/"
   },
   "syncKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
-    "kafkaTopic": "example"
+    "kafkaTopic": "example",
+    "initDefaultOffset": "latest"
   },
   "syncJdbc": {
     "dbType": "MYSQL",
@@ -17,12 +19,8 @@
     "schema": "hdsp_test",
     "table": "dev_common_test_copy",
     "batchInterval": 1,
-    "update": {
-      "query": "UPDATE `hdsp_test`.`dev_common_test_copy` set name = ?, create_date = ? where id = ?",
-      "colTypes": "VARCHAR, DATETIME, INT"
-    },
-    "insert": {
-      "query": "INSERT INTO `hdsp_test`.`dev_common_test_copy`(`id`,`name`,`create_date`) values(?, ?, ?)",
+    "replace": {
+      "query": "REPLACE INTO `hdsp_test`.`dev_common_test_copy`(`id`,`name`,`create_date`) values(?, ?, ?)",
       "colTypes": "INT, VARCHAR, DATETIME"
     },
     "delete": {

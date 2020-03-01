@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * <p>
- * description
+ * 字段类型转jdbcType工具类
  * </p>
  *
  * @author isacc 2020/02/27 15:49

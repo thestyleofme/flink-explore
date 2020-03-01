@@ -2,16 +2,16 @@ package org.abigballofmud.flink.app.model
 
 /**
  * <p>
- * description
+ * flink执行配置case类
  * </p>
  *
  * @author isacc 2020/02/26 16:55
  * @since 1.0
  */
 case class SyncConfig(syncFlink: SyncFlink,
-                     syncKafka: SyncKafka,
-                     syncJdbc: SyncJdbc
-                    ) extends Serializable
+                      syncKafka: SyncKafka,
+                      syncJdbc: SyncJdbc
+                     ) extends Serializable
 
 /**
  * flink执行配置类
@@ -20,7 +20,8 @@ case class SyncConfig(syncFlink: SyncFlink,
  */
 case class SyncFlink(jobName: String,
                      sourceSchema: String,
-                     sourceTable: String) extends Serializable
+                     sourceTable: String,
+                     checkPointPath: String) extends Serializable
 
 /**
  * kafka信息
@@ -56,6 +57,7 @@ case class SyncJdbc(dbType: String,
                     schema: String,
                     table: String,
                     batchInterval: Int = 1,
+                    var replace: QueryAndSqlType,
                     var update: QueryAndSqlType,
                     var insert: QueryAndSqlType,
                     var delete: QueryAndSqlType) extends Serializable
