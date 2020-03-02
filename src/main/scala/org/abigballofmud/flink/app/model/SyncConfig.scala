@@ -2,15 +2,16 @@ package org.abigballofmud.flink.app.model
 
 /**
  * <p>
- * flink执行配置case类
+ * 实时数仓flink执行配置case类
  * </p>
  *
  * @author isacc 2020/02/26 16:55
  * @since 1.0
  */
 case class SyncConfig(syncFlink: SyncFlink,
-                      syncKafka: SyncKafka,
-                      syncJdbc: SyncJdbc
+                      sourceKafka: SourceKafka,
+                      syncJdbc: SyncJdbc,
+                      syncKafka: SyncKafka
                      ) extends Serializable
 
 /**
@@ -21,7 +22,8 @@ case class SyncConfig(syncFlink: SyncFlink,
 case class SyncFlink(jobName: String,
                      sourceSchema: String,
                      sourceTable: String,
-                     checkPointPath: String) extends Serializable
+                     checkPointPath: String,
+                     writeType: String) extends Serializable
 
 /**
  * kafka信息
@@ -30,9 +32,18 @@ case class SyncFlink(jobName: String,
  * @param kafkaTopic            topic
  * @param initDefaultOffset     初始offset
  */
+case class SourceKafka(kafkaBootstrapServers: String,
+                       kafkaTopic: String,
+                       initDefaultOffset: String) extends Serializable
+
+/**
+ * 写入kafka的信息
+ *
+ * @param kafkaBootstrapServers kafkaBootstrapServers
+ * @param kafkaTopic            topic
+ */
 case class SyncKafka(kafkaBootstrapServers: String,
-                     kafkaTopic: String,
-                     initDefaultOffset: String) extends Serializable
+                     kafkaTopic: String) extends Serializable
 
 /**
  * jdbc类型同步信息

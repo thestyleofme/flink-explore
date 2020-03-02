@@ -69,7 +69,7 @@ public class MysqlTwoPhaseCommitSink extends TwoPhaseCommitSinkFunction<ObjectNo
     }
 
     /**
-     * 如果invoke执行异常则回滚事物，下一次的checkpoint操作也不会执行
+     * 如果invoke执行异常则回滚事务，下一次的checkpoint操作不会执行
      *
      * @param transaction Connection
      */

@@ -3,12 +3,18 @@
     "jobName": "flink_mysql_realtime_sync",
     "sourceSchema": "hdsp_test",
     "sourceTable": "dev_common_test",
-    "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/"
+    "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
+    "writeType": "kafka"
+  },
+  "sourceKafka": {
+    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
+    "kafkaTopic": "example",
+    "initDefaultOffset": "{\"0\":6500}"
   },
   "syncKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
-    "kafkaTopic": "example",
-    "initDefaultOffset": "latest"
+    "kafkaTopic": "flink-kafka-sink-test",
+    "partition": 1
   },
   "syncJdbc": {
     "dbType": "MYSQL",

@@ -52,19 +52,19 @@ object CommonUtil {
    * @param syncConfig    SyncConfig
    */
   def initOffset(kafkaConsumer: FlinkKafkaConsumer[ObjectNode], syncConfig: SyncConfig): Unit = {
-    if (syncConfig.syncKafka.initDefaultOffset.equalsIgnoreCase(CommonConstant.KAFKA_INIT_OFFSET_EARLIEST)) {
+    if (syncConfig.sourceKafka.initDefaultOffset.equalsIgnoreCase(CommonConstant.KAFKA_INIT_OFFSET_EARLIEST)) {
       kafkaConsumer.setStartFromEarliest()
-    } else if (syncConfig.syncKafka.initDefaultOffset.equalsIgnoreCase(CommonConstant.KAFKA_INIT_OFFSET_LATEST)) {
+    } else if (syncConfig.sourceKafka.initDefaultOffset.equalsIgnoreCase(CommonConstant.KAFKA_INIT_OFFSET_LATEST)) {
       kafkaConsumer.setStartFromLatest()
     } else {
       // 指定了分区以及偏移量 传入的json格式：{"0":100,"1":200,"3":300}
       val specificStartOffsets = new java.util.HashMap[KafkaTopicPartition, java.lang.Long]()
       val typeToken: Type = new TypeToken[java.util.Map[String, java.lang.Long]]() {}.getType
-      val map: java.util.Map[String, java.lang.Long] = gson.fromJson(syncConfig.syncKafka.initDefaultOffset, typeToken)
+      val map: java.util.Map[String, java.lang.Long] = gson.fromJson(syncConfig.sourceKafka.initDefaultOffset, typeToken)
       val iterator: util.Iterator[util.Map.Entry[String, java.lang.Long]] = map.entrySet().iterator()
       while (iterator.hasNext) {
         val entry: util.Map.Entry[String, java.lang.Long] = iterator.next()
-        specificStartOffsets.put(new KafkaTopicPartition(syncConfig.syncKafka.kafkaTopic, entry.getKey.toInt), entry.getValue)
+        specificStartOffsets.put(new KafkaTopicPartition(syncConfig.sourceKafka.kafkaTopic, entry.getKey.toInt), entry.getValue)
       }
       kafkaConsumer.setStartFromSpecificOffsets(specificStartOffsets)
     }
