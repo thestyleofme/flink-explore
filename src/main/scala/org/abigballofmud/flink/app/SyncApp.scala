@@ -19,6 +19,17 @@ import org.slf4j.LoggerFactory
  * <p>
  * 基于canal的数据实时同步
  * --configFilePath src/main/resources/canal-sync-demo.json
+ *
+ * flink执行job示例：
+ * /data/flink/flink-1.10.0/bin/flink run \
+ * -m yarn-cluster \
+ * -p 1 \
+ * -yjm 1024m \
+ * -ytm 4096m \
+ * -ynm flink-test \
+ * -c org.abigballofmud.flink.app.SyncApp \
+ * /data/flink/flink-app-1.0-SNAPSHOT-jar-with-dependencies.jar \
+ * --configFilePath hdfs://hdsp001:8020/data/flink_config_file/canal-sync-demo-cluster.json
  * </p>
  *
  * @author isacc 2020/02/25 14:55

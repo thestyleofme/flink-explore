@@ -1,0 +1,37 @@
+{
+  "syncFlink": {
+    "jobName": "flink_mysql_realtime_sync",
+    "sourceSchema": "hdsp_test",
+    "sourceTable": "dev_common_test",
+    "checkPointPath": "hdfs://hdsp001:8020/data/flink-checkpoints/",
+    "writeType": "jdbc"
+  },
+  "sourceKafka": {
+    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
+    "kafkaTopic": "example",
+    "initDefaultOffset": "{\"0\":6500}"
+  },
+  "syncKafka": {
+    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
+    "kafkaTopic": "flink-kafka-sink-test",
+    "partition": 1
+  },
+  "syncJdbc": {
+    "dbType": "MYSQL",
+    "driver": "com.mysql.jdbc.Driver",
+    "jdbcUrl": "jdbc:mysql://dev.hdsp.hand.com:7233/hdsp_test?useUnicode=true&characterEncoding=utf-8&useSSL=false",
+    "user": "hdsp_dev",
+    "pwd": "hdsp_dev",
+    "schema": "hdsp_test",
+    "table": "dev_common_test_copy",
+    "batchInterval": 1,
+    "replace": {
+      "query": "REPLACE INTO `hdsp_test`.`dev_common_test_copy`(`id`,`name`,`create_date`) values(?, ?, ?)",
+      "colTypes": "INT, VARCHAR, DATETIME"
+    },
+    "delete": {
+      "query": "DELETE FROM `hdsp_test`.`dev_common_test_copy` where id = ?",
+      "colTypes": "INT"
+    }
+  }
+}
