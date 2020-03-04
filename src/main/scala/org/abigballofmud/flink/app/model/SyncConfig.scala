@@ -1,5 +1,7 @@
 package org.abigballofmud.flink.app.model
 
+import redis.clients.jedis.Protocol
+
 /**
  * <p>
  * 实时数仓flink执行配置case类
@@ -12,7 +14,8 @@ case class SyncConfig(syncFlink: SyncFlink,
                       sourceKafka: SourceKafka,
                       syncJdbc: SyncJdbc,
                       syncKafka: SyncKafka,
-                      syncEs6: SyncEs6
+                      syncEs6: SyncEs6,
+                      syncRedis: SyncRedis
                      ) extends Serializable
 
 /**
@@ -45,6 +48,20 @@ case class SourceKafka(kafkaBootstrapServers: String,
  */
 case class SyncKafka(kafkaBootstrapServers: String,
                      kafkaTopic: String) extends Serializable
+
+/**
+ * 写入redis
+ *
+ * @param redisHost     redisHost
+ * @param redisPort     redisPort
+ * @param redisPassword redisPassword
+ * @param redisDataBase redisDataBase
+ */
+case class SyncRedis(redisHost: String,
+                     redisPort: Int,
+                     redisPassword: String,
+                     redisDataBase: Int = Protocol.DEFAULT_DATABASE,
+                     redisKey: String) extends Serializable
 
 /**
  * 同步到es6的配置信息

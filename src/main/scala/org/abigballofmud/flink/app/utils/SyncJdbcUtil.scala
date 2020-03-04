@@ -1,12 +1,13 @@
 package org.abigballofmud.flink.app.utils
 
 import java.nio.charset.StandardCharsets
+import java.sql.Timestamp
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime, ZoneId}
 import java.util
 import java.util.{Date, Objects}
 
-import org.abigballofmud.flink.app.model.{JdbcTypeUtil, QueryAndSqlType, SyncConfig}
+import org.abigballofmud.flink.app.model.{QueryAndSqlType, SyncConfig}
 import org.apache.flink.api.common.functions.MapFunction
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
@@ -184,6 +185,32 @@ object SyncJdbcUtil {
       val entry: util.Map.Entry[String, JsonNode] = tuple._3.next()
       if (tuple._1.contains(entry.getKey)) {
         map.put(entry.getKey, tuple._1(entry.getKey))
+      }
+    }
+    map
+  }
+
+  /**
+   *
+   * canal中data数据转为map
+   *
+   * @param objectNode ObjectNode
+   * @return util.HashMap[String, String]
+   */
+  def genRealValueMap(objectNode: ObjectNode): util.HashMap[String, Object] = {
+    val tuple: (mutable.Map[String, String], Array[String], util.Iterator[util.Map.Entry[String, JsonNode]]) = canalCommonInfo(objectNode)
+    val map = new util.HashMap[String, Object]()
+    while (tuple._3.hasNext) {
+      val entry: util.Map.Entry[String, JsonNode] = tuple._3.next()
+      if (tuple._1.contains(entry.getKey)) {
+        var value: Object = getValue(tuple._1, tuple._2(0), entry)
+        value match {
+          case timestamp: Timestamp =>
+            val localDateTime: LocalDateTime = new Date(timestamp.getTime).toInstant.atZone(ZoneId.systemDefault).toLocalDateTime
+            value = localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+          case _ =>
+        }
+        map.put(entry.getKey, value)
       }
     }
     map

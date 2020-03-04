@@ -1,6 +1,5 @@
 package org.abigballofmud.flink.apitest.sinktest
 
-import com.google.gson.Gson
 import org.abigballofmud.flink.apitest.SensorReading
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.redis.RedisSink
@@ -17,8 +16,6 @@ import org.apache.flink.streaming.connectors.redis.common.mapper.{RedisCommand, 
  */
 //noinspection DuplicatedCode
 object RedisSinkTest {
-
-  private val gson = new Gson()
 
   private val config: FlinkJedisPoolConfig = new FlinkJedisPoolConfig.Builder()
     .setHost("hdsp004")

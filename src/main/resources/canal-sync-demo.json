@@ -4,7 +4,14 @@
     "sourceSchema": "hdsp_test",
     "sourceTable": "dev_common_test",
     "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
-    "writeType": "jdbc"
+    "writeType": "redis"
+  },
+  "syncRedis": {
+    "redisHost": "hdsp004",
+    "redisPort": 6379,
+    "redisPassword": "hdsp_dev",
+    "redisDataBase": 0,
+    "redisKey": "dev_common_test"
   },
   "syncEs6": {
     "httpHosts": "hdsp003:9200",

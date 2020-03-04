@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.app.model;
+package org.abigballofmud.flink.app.utils;
 
 import java.sql.Types;
 import java.util.Collections;

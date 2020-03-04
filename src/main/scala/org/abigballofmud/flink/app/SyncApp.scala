@@ -8,7 +8,7 @@ import org.abigballofmud.flink.app.constansts.WriteTypeConstant
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.udf.{SchemaAndTableFilter, SyncKafkaSerializationSchema}
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.{Es6Writer, JdbcWriter}
+import org.abigballofmud.flink.app.writers.{Es6Writer, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
@@ -84,6 +84,9 @@ object SyncApp {
     } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.ELASTICSEARCH6)) {
       // 写入es
       Es6Writer.doWrite(syncConfig, kafkaStream)
+    } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.REDIS)) {
+      // 写入redis
+      RedisWriter.doWrite(syncConfig, kafkaStream)
     } else {
       throw new IllegalArgumentException("invalid writeType")
     }
