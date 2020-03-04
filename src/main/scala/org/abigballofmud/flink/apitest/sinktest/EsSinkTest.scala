@@ -17,6 +17,8 @@ import org.elasticsearch.client.Requests
  * http://hdsp003:9200/_cat/indices?v
  * es查看index下的数据，这里的sensor即index
  * http://hdsp003:9200/sensor/_search?pretty
+ * 删除index
+ * curl -X DELETE "hdsp003:9200/sensor?pretty"
  * </p>
  *
  * @author isacc 2020/03/03 1:19

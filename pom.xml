@@ -187,6 +187,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- flink 与 hadoop jar冲突 这里以flink的为准-->
             <dependency>
                 <artifactId>commons-cli</artifactId>
                 <groupId>commons-cli</groupId>

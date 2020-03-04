@@ -4,7 +4,14 @@
     "sourceSchema": "hdsp_test",
     "sourceTable": "dev_common_test",
     "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
-    "writeType": "kafka"
+    "writeType": "jdbc"
+  },
+  "syncEs6": {
+    "httpHosts": "hdsp003:9200",
+    "esSchema": "http",
+    "esIndex": "flink_es_test",
+    "esType": "canal",
+    "bulkFlushMaxActions": 1
   },
   "sourceKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",

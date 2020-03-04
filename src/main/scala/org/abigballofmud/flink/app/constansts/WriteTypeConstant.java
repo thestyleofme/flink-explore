@@ -12,4 +12,5 @@ public interface WriteTypeConstant {
 
     String JDBC = "jdbc";
     String KAFKA = "kafka";
+    String ELASTICSEARCH6 = "elasticsearch6";
 }

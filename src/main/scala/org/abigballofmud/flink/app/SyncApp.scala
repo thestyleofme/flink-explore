@@ -8,9 +8,9 @@ import org.abigballofmud.flink.app.constansts.WriteTypeConstant
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.udf.{SchemaAndTableFilter, SyncKafkaSerializationSchema}
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.JdbcWriter
+import org.abigballofmud.flink.app.writers.{Es6Writer, JdbcWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
-import org.apache.flink.streaming.api.scala.{DataStream, _}
+import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.JSONKeyValueDeserializationSchema
 import org.slf4j.LoggerFactory
@@ -45,10 +45,6 @@ object SyncApp {
     // 获取flink执行配置
     val syncConfig: SyncConfig = CommonUtil.genSyncConfig(args)
     log.info("flink config file load success")
-    if (WriteTypeConstant.JDBC.equalsIgnoreCase(syncConfig.syncFlink.writeType)) {
-      // 根据字段类型生成sqlType
-      SyncJdbcUtil.genSqlTypes(syncConfig)
-    }
     // flink容错机制设置 如checkpoint、重启策略等
     CommonUtil.toleranceOption(env, syncConfig)
     val properties = new Properties()
@@ -57,7 +53,7 @@ object SyncApp {
       syncConfig.sourceKafka.kafkaTopic,
       new JSONKeyValueDeserializationSchema(true),
       properties)
-    log.info("starting read kafka...")
+    log.info("starting read from kafka...")
     // 设置初始kafka读取的offset
     CommonUtil.initOffset(kafkaConsumer, syncConfig)
     val kafkaStream: DataStream[ObjectNode] = env.addSource(kafkaConsumer)
@@ -70,6 +66,8 @@ object SyncApp {
 
   def doWrite(syncConfig: SyncConfig, kafkaStream: DataStream[ObjectNode]): Unit = {
     if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.JDBC)) {
+      // 根据字段类型生成sqlType
+      SyncJdbcUtil.genSqlTypes(syncConfig)
       // 分流，若配置了replace就分为两批，没有则三批
       val processedDataStream: DataStream[ObjectNode] = CommonUtil.splitDataStream(kafkaStream, syncConfig)
       JdbcWriter.doWrite(processedDataStream, syncConfig)
@@ -83,6 +81,9 @@ object SyncApp {
         properties,
         FlinkKafkaProducer.Semantic.AT_LEAST_ONCE,
         3))
+    } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.ELASTICSEARCH6)) {
+      // 写入es
+      Es6Writer.doWrite(syncConfig, kafkaStream)
     } else {
       throw new IllegalArgumentException("invalid writeType")
     }

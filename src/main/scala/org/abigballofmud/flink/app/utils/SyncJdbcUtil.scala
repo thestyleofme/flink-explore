@@ -171,6 +171,25 @@ object SyncJdbcUtil {
   }
 
   /**
+   *
+   * canal中data数据转为map
+   *
+   * @param objectNode ObjectNode
+   * @return util.HashMap[String, String]
+   */
+  def genValueMap(objectNode: ObjectNode): util.HashMap[String, String] = {
+    val tuple: (mutable.Map[String, String], Array[String], util.Iterator[util.Map.Entry[String, JsonNode]]) = canalCommonInfo(objectNode)
+    val map = new util.HashMap[String, String]()
+    while (tuple._3.hasNext) {
+      val entry: util.Map.Entry[String, JsonNode] = tuple._3.next()
+      if (tuple._1.contains(entry.getKey)) {
+        map.put(entry.getKey, tuple._1(entry.getKey))
+      }
+    }
+    map
+  }
+
+  /**
    * 根据mysql字段类型去适配java.sql.Types
    *
    * @param row     Row
@@ -185,46 +204,60 @@ object SyncJdbcUtil {
       // 若传了主键，只给row设置主键的值
       return
     }
+    row.setField(index, getValue(dataMap, pkField, entry))
+  }
+
+  /**
+   * 根据mysql字段类型去适配java.sql.Types
+   *
+   * @param dataMap canal的data值
+   * @param pkField 主键
+   * @param entry   canal的mysqlType值
+   * @return value
+   */
+  def getValue(dataMap: mutable.Map[String, String], pkField: String, entry: util.Map.Entry[String, JsonNode]): Object = {
+    val col: String = entry.getKey
     val colType: String = entry.getValue.asText().toUpperCase
+    var result: Object = null
     if (colType.contains("CHAR")) {
       //      Types.CHAR
-      row.setField(index, dataMap(col))
+      result = dataMap(col)
     } else if (colType.contains("BOOLEAN") || colType.contains("BIT")) {
       //      Types.BOOLEAN
-      row.setField(index, java.lang.Boolean.valueOf(dataMap(col)))
+      result = java.lang.Boolean.valueOf(dataMap(col))
     } else if (colType.contains("BLOB") || colType.contains("TINYINT")) {
       //      Types.BINARY
-      row.setField(index, dataMap(col).getBytes(StandardCharsets.UTF_8))
+      result = dataMap(col).getBytes(StandardCharsets.UTF_8)
     } else if (colType.contains("SMALLINT")) {
       //      Types.SMALLINT
-      row.setField(index, java.lang.Short.valueOf(dataMap(col)))
+      result = java.lang.Short.valueOf(dataMap(col))
     } else if (colType.contains("BIGINT")) {
       //     Types.BIGINT
-      row.setField(index, java.lang.Long.valueOf(dataMap(col)))
+      result = java.lang.Long.valueOf(dataMap(col))
     } else if (colType.contains("INT")) {
       //       Types.INTEGER
-      row.setField(index, java.lang.Integer.valueOf(dataMap(col)))
+      result = java.lang.Integer.valueOf(dataMap(col))
     } else if (colType.contains("DOUBLE")) {
       //       Types.DOUBLE
-      row.setField(index, java.lang.Double.valueOf(dataMap(col)))
+      result = java.lang.Double.valueOf(dataMap(col))
     } else if (colType.contains("DECIMAL")) {
       //       Types.DECIMAL
-      row.setField(index, new java.math.BigDecimal(dataMap(col)))
+      result = new java.math.BigDecimal(dataMap(col))
     } else if (colType.equals("DATE")) {
       //       Types.DATE
       val localDate: LocalDate = LocalDate.parse(dataMap(col), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-      row.setField(index, Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant))
+      result = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant)
     } else if (colType.equals("DATETIME")) {
       //       Types.TIMESTAMP
       val localDateTime: LocalDateTime = LocalDateTime.parse(dataMap(col), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-      row.setField(index, new java.sql.Timestamp(localDateTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli))
+      result = new java.sql.Timestamp(localDateTime.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli)
     } else if (colType.contains("TIMESTAMP")) {
       //       Types.TIMESTAMP
-      row.setField(index, new java.sql.Timestamp(java.lang.Long.valueOf(dataMap(col))))
+      result = new java.sql.Timestamp(java.lang.Long.valueOf(dataMap(col)))
     } else {
-      row.setField(index, dataMap(col))
+      result = dataMap(col)
     }
+    result
   }
-
 
 }
