@@ -1,15 +1,11 @@
 package org.abigballofmud.flink.app.writers
 
-import com.google.gson.Gson
-import org.abigballofmud.flink.apitest.SensorReading
-import org.abigballofmud.flink.apitest.sinktest.RedisSinkTest.config
 import org.abigballofmud.flink.app.model.SyncConfig
-import org.abigballofmud.flink.app.udf.SyncRedisMapper
+import org.abigballofmud.flink.app.udf.redis.SyncRedisMapper
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala.DataStream
 import org.apache.flink.streaming.connectors.redis.RedisSink
 import org.apache.flink.streaming.connectors.redis.common.config.FlinkJedisPoolConfig
-import org.apache.flink.streaming.connectors.redis.common.mapper.{RedisCommand, RedisCommandDescription, RedisMapper}
 
 /**
  * <p>

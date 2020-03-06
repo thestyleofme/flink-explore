@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.app.udf
+package org.abigballofmud.flink.app.udf.kafka
 
 import java.lang
 import java.nio.charset.StandardCharsets

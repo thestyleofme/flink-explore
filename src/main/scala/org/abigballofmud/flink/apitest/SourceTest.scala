@@ -34,7 +34,7 @@ object SourceTest {
 
     // 3. 从kafka中读
     //    val properties = new Properties()
-    //    properties.setProperty("bootstrap.servers", "192.168.12.245:6667,192.168.12.246:6667,192.168.12.247:6667")
+    //    properties.setProperty("bootstrap.servers", "hdsp001:6667,hdsp002:6667,hdsp003:6667")
     //    val kafkaConsumer: FlinkKafkaConsumerBase[String] = new FlinkKafkaConsumer[String](
     //      "example",
     //      new SimpleStringSchema(),

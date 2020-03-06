@@ -16,7 +16,10 @@
         <log4j.version>1.2.17</log4j.version>
         <slf4j.log4j12.version>1.7.21</slf4j.log4j12.version>
         <kafka.client.version>2.0.0.3.1.0.0-78</kafka.client.version>
+        <!-- 需自行编译flink.shaded flink-shaded-hadoop-2-uber-3.1.1.3.1.0.0-78-10.0.jar-->
         <hadoop.version>3.1.1.3.1.0.0-78</hadoop.version>
+        <flink.shaded.version>10.0</flink.shaded.version>
+        <hive.version>3.1.0.3.1.0.0-78</hive.version>
         <commons-cli.version>1.3.1</commons-cli.version>
     </properties>
 
@@ -52,6 +55,7 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-kafka_2.11</artifactId>
             <version>${flink.version}</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>kafka-clients</artifactId>
@@ -109,7 +113,57 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-common</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-hive_2.11</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-hadoop-compatibility_2.11</artifactId>
+            <version>1.10.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-exec</artifactId>
+            <version>${hive.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--<dependency>
+            <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-filesystem_2.11</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-parquet_2.11</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-sequence-file</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -124,6 +178,7 @@
             <groupId>org.apache.bahir</groupId>
             <artifactId>flink-connector-redis_2.11</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- hadoop-->
         <dependency>

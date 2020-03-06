@@ -6,9 +6,10 @@ import com.google.gson.Gson
 import com.typesafe.scalalogging.Logger
 import org.abigballofmud.flink.app.constansts.WriteTypeConstant
 import org.abigballofmud.flink.app.model.SyncConfig
-import org.abigballofmud.flink.app.udf.{SchemaAndTableFilter, SyncKafkaSerializationSchema}
+import org.abigballofmud.flink.app.udf.filter.SchemaAndTableFilter
+import org.abigballofmud.flink.app.udf.kafka.SyncKafkaSerializationSchema
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.{Es6Writer, JdbcWriter, RedisWriter}
+import org.abigballofmud.flink.app.writers.{Es6Writer, HdfsWriter, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
@@ -41,6 +42,11 @@ object SyncApp {
   val gson: Gson = new Gson()
 
   def main(args: Array[String]): Unit = {
+
+    // 由于需要写hdfs有权限问题 这里造假当前用户
+    System.setProperty("HADOOP_USER_NAME", "hive")
+    System.setProperty("user.name", "hdfs")
+
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     // 获取flink执行配置
     val syncConfig: SyncConfig = CommonUtil.genSyncConfig(args)
@@ -59,36 +65,45 @@ object SyncApp {
     val kafkaStream: DataStream[ObjectNode] = env.addSource(kafkaConsumer)
       .filter(new SchemaAndTableFilter(syncConfig))
     // sink
-    doWrite(syncConfig, kafkaStream)
+    kafkaToSink(syncConfig, kafkaStream)
     log.info("flink starting...")
     env.execute(syncConfig.syncFlink.jobName)
   }
 
-  def doWrite(syncConfig: SyncConfig, kafkaStream: DataStream[ObjectNode]): Unit = {
-    if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.JDBC)) {
-      // 根据字段类型生成sqlType
-      SyncJdbcUtil.genSqlTypes(syncConfig)
-      // 分流，若配置了replace就分为两批，没有则三批
-      val processedDataStream: DataStream[ObjectNode] = CommonUtil.splitDataStream(kafkaStream, syncConfig)
-      JdbcWriter.doWrite(processedDataStream, syncConfig)
-    } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.KAFKA)) {
-      // 写入另一个topic
-      val properties = new Properties()
-      properties.setProperty("bootstrap.servers", syncConfig.syncKafka.kafkaBootstrapServers)
-      kafkaStream.addSink(new FlinkKafkaProducer[ObjectNode](
-        syncConfig.syncKafka.kafkaTopic,
-        new SyncKafkaSerializationSchema(syncConfig.syncKafka.kafkaTopic),
-        properties,
-        FlinkKafkaProducer.Semantic.AT_LEAST_ONCE,
-        3))
-    } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.ELASTICSEARCH6)) {
-      // 写入es
-      Es6Writer.doWrite(syncConfig, kafkaStream)
-    } else if (syncConfig.syncFlink.writeType.equalsIgnoreCase(WriteTypeConstant.REDIS)) {
-      // 写入redis
-      RedisWriter.doWrite(syncConfig, kafkaStream)
-    } else {
-      throw new IllegalArgumentException("invalid writeType")
+  /**
+   * kafka DataStream写入不同sink
+   *
+   * @param syncConfig  SyncConfig
+   * @param kafkaStream DataStream[ObjectNode]
+   */
+  def kafkaToSink(syncConfig: SyncConfig, kafkaStream: DataStream[ObjectNode]): Unit = {
+    syncConfig.syncFlink.writeType match {
+      case WriteTypeConstant.JDBC =>
+        // 根据字段类型生成sqlType
+        SyncJdbcUtil.genSqlTypes(syncConfig)
+        // 分流，若配置了replace就分为两批，没有则三批
+        val processedDataStream: DataStream[ObjectNode] = CommonUtil.splitDataStream(kafkaStream, syncConfig)
+        JdbcWriter.doWrite(processedDataStream, syncConfig)
+      case WriteTypeConstant.KAFKA =>
+        // 写入另一个topic
+        val properties = new Properties()
+        properties.setProperty("bootstrap.servers", syncConfig.syncKafka.kafkaBootstrapServers)
+        kafkaStream.addSink(new FlinkKafkaProducer[ObjectNode](
+          syncConfig.syncKafka.kafkaTopic,
+          new SyncKafkaSerializationSchema(syncConfig.syncKafka.kafkaTopic),
+          properties,
+          FlinkKafkaProducer.Semantic.AT_LEAST_ONCE,
+          3))
+      case WriteTypeConstant.ELASTICSEARCH6 =>
+        // 写入es
+        Es6Writer.doWrite(syncConfig, kafkaStream)
+      case WriteTypeConstant.REDIS =>
+        // 写入redis
+        RedisWriter.doWrite(syncConfig, kafkaStream)
+      case WriteTypeConstant.HDFS =>
+        // 通过写文件方式写入hive
+        HdfsWriter.doWrite(syncConfig, kafkaStream)
+      case _ => throw new IllegalArgumentException("unsupported writeType")
     }
   }
 }

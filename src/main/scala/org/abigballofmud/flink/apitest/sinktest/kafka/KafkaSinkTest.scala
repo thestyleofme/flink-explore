@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.apitest.sinktest
+package org.abigballofmud.flink.apitest.sinktest.kafka
 
 import java.util.Properties
 

@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.app.udf
+package org.abigballofmud.flink.app.udf.filter
 
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.apache.flink.api.common.functions.RichFilterFunction

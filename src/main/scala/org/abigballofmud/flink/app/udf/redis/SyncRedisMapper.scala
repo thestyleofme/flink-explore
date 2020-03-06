@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.app.udf
+package org.abigballofmud.flink.app.udf.redis
 
 import java.util
 import java.util.Objects

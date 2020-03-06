@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.apitest.sinktest
+package org.abigballofmud.flink.apitest.sinktest.jdbc
 
 import java.sql.{Connection, DriverManager, PreparedStatement}
 import java.util.Objects

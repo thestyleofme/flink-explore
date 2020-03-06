@@ -6,6 +6,14 @@
     "checkPointPath": "hdfs://hdsp001:8020/data/flink-checkpoints/",
     "writeType": "jdbc"
   },
+  "syncHdfs": {
+    "hdfsPath": "hdfs://hdsp001:8020/data/flink-test",
+    "fileType": "TEXT",
+    "fieldsDelimited": ",",
+    "partPrefix": "part",
+    "partSuffix": ".csv",
+    "partitionName": "dt"
+  },
   "syncRedis": {
     "redisHost": "hdsp004",
     "redisPort": 6379,

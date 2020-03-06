@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.apitest.sinktest
+package org.abigballofmud.flink.apitest.sinktest.redis
 
 import org.abigballofmud.flink.apitest.SensorReading
 import org.apache.flink.streaming.api.scala._
