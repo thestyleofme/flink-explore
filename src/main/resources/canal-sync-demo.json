@@ -4,15 +4,16 @@
     "sourceSchema": "hdsp_test",
     "sourceTable": "dev_common_test",
     "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
-    "writeType": "hdfs"
+    "writeType": "hive"
   },
-  "syncHdfs": {
+  "syncHive": {
     "hdfsPath": "hdfs://hdsp001:8020/data/flink-test",
-    "fileType": "TEXT",
-    "fieldsDelimited": ",",
-    "partPrefix": "part",
+    "fileType": "parquet",
+    "fieldsDelimited": "\u0001",
+    "isPartition": false,
+    "partitionName": "dt",
     "partSuffix": ".csv",
-    "partitionName": "dt"
+    "partPrefix": "part"
   },
   "syncRedis": {
     "redisHost": "hdsp004",

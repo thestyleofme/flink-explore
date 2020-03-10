@@ -9,7 +9,7 @@ import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.udf.filter.SchemaAndTableFilter
 import org.abigballofmud.flink.app.udf.kafka.SyncKafkaSerializationSchema
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.{Es6Writer, HdfsWriter, JdbcWriter, RedisWriter}
+import org.abigballofmud.flink.app.writers.{Es6Writer, HiveWriter, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
@@ -45,7 +45,7 @@ object SyncApp {
 
     // 由于需要写hdfs有权限问题 这里造假当前用户
     System.setProperty("HADOOP_USER_NAME", "hive")
-    System.setProperty("user.name", "hdfs")
+    System.setProperty("user.name", "hive")
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     // 获取flink执行配置
@@ -100,9 +100,9 @@ object SyncApp {
       case WriteTypeConstant.REDIS =>
         // 写入redis
         RedisWriter.doWrite(syncConfig, kafkaStream)
-      case WriteTypeConstant.HDFS =>
+      case WriteTypeConstant.HIVE =>
         // 通过写文件方式写入hive
-        HdfsWriter.doWrite(syncConfig, kafkaStream)
+        HiveWriter.doWrite(syncConfig, kafkaStream)
       case _ => throw new IllegalArgumentException("unsupported writeType")
     }
   }

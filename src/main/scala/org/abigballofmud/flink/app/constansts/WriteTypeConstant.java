@@ -14,5 +14,5 @@ public interface WriteTypeConstant {
     String KAFKA = "kafka";
     String ELASTICSEARCH6 = "elasticsearch6";
     String REDIS = "redis";
-    String HDFS = "hdfs";
+    String HIVE = "hive";
 }

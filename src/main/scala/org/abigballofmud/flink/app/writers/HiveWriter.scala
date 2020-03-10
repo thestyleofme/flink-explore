@@ -5,11 +5,11 @@ import java.util
 import com.typesafe.scalalogging.Logger
 import org.abigballofmud.flink.app.constansts.HiveFileTypeConstant
 import org.abigballofmud.flink.app.model.SyncConfig
-import org.abigballofmud.flink.app.udf.file.SyncHiveBucketAssigner
+import org.abigballofmud.flink.app.udf.file.SyncHiveTextBucketAssigner
 import org.apache.flink.api.common.functions.MapFunction
 import org.apache.flink.api.common.serialization.SimpleStringEncoder
 import org.apache.flink.core.fs.Path
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy
 import org.apache.flink.streaming.api.functions.sink.filesystem.{OutputFileConfig, StreamingFileSink}
@@ -25,13 +25,13 @@ import org.slf4j.LoggerFactory
  * @since 1.0
  */
 //noinspection DuplicatedCode
-object HdfsWriter {
+object HiveWriter {
 
   private val log = Logger(LoggerFactory.getLogger(Es6Writer.getClass))
 
   def doWrite(syncConfig: SyncConfig, kafkaStream: DataStream[ObjectNode]): Unit = {
     log.info("start writing to hive...")
-    syncConfig.syncHdfs.fileType.toUpperCase match {
+    syncConfig.syncHive.fileType.toUpperCase match {
       case HiveFileTypeConstant.TEXT =>
         val dataStream: DataStream[String] = kafkaStream.map(objectNode2CsvString(syncConfig))
         dataStream.addSink(genRowFormatBuilder(syncConfig).build())
@@ -42,23 +42,23 @@ object HdfsWriter {
 
   /**
    *
-   * hive text表，将canal中的data转为csv,逗号分割
+   * hive text表，将canal中的data转为csv，按照fieldsDelimited进行分割
    *
    * @return MapFunction[ObjectNode, String]
    */
   def objectNode2CsvString(syncConfig: SyncConfig): MapFunction[ObjectNode, String] = {
     new MapFunction[ObjectNode, String]() {
       override def map(objectNode: ObjectNode): String = {
-        val data: util.Iterator[util.Map.Entry[String, JsonNode]] = objectNode.get("value").findValue("data").get(0).fields()
+        val data: util.Iterator[util.Map.Entry[String, databind.JsonNode]] = objectNode.get("value").findValue("data").get(0).fields()
         var list: List[String] = List()
         while (data.hasNext) {
-          val value: util.Map.Entry[String, JsonNode] = data.next()
+          val value: util.Map.Entry[String, databind.JsonNode] = data.next()
           list = list :+ value.getValue.asText()
         }
         // list中增加操作类型 操作时间（event-time）
         list = list :+ objectNode.get("value").get("type").asText()
         list = list :+ objectNode.get("value").get("ts").asText()
-        list.mkString(syncConfig.syncHdfs.fieldsDelimited)
+        list.mkString(syncConfig.syncHive.fieldsDelimited)
       }
     }
   }
@@ -72,8 +72,8 @@ object HdfsWriter {
   def genRowFormatBuilder(syncConfig: SyncConfig): StreamingFileSink.RowFormatBuilder[String, String, _ <: StreamingFileSink.RowFormatBuilder[String, String, _]] = {
     val builder: StreamingFileSink.RowFormatBuilder[String, String, _ <: StreamingFileSink.RowFormatBuilder[String, String, _]] =
       StreamingFileSink
-        .forRowFormat(new Path(syncConfig.syncHdfs.hdfsPath), new SimpleStringEncoder[String]("UTF-8"))
-    builder.withBucketAssigner(new SyncHiveBucketAssigner(syncConfig))
+        .forRowFormat(new Path(syncConfig.syncHive.hdfsPath), new SimpleStringEncoder[String]("UTF-8"))
+    builder.withBucketAssigner(new SyncHiveTextBucketAssigner(syncConfig))
     builder.withRollingPolicy(OnCheckpointRollingPolicy.build())
     builder.withOutputFileConfig(genOutputFileConfig(syncConfig))
     builder
@@ -88,8 +88,8 @@ object HdfsWriter {
   def genOutputFileConfig(syncConfig: SyncConfig): OutputFileConfig = {
     OutputFileConfig
       .builder()
-      .withPartPrefix(syncConfig.syncHdfs.partPrefix)
-      .withPartSuffix(syncConfig.syncHdfs.partSuffix)
+      .withPartPrefix(syncConfig.syncHive.partPrefix)
+      .withPartSuffix(syncConfig.syncHive.partSuffix)
       .build()
   }
 
