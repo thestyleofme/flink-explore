@@ -68,7 +68,7 @@ object Es6Writer {
       // 插入 更新
       val indexRequest: IndexRequest = Requests.indexRequest
         .index(syncConfig.syncEs6.esIndex)
-        .`type`(syncConfig.syncEs6.esType)
+        .`type`(element.get("value").get("database").asText())
         .id(map.get(splitArr(0)))
         .source(map)
       indexer.add(indexRequest)
@@ -76,7 +76,7 @@ object Es6Writer {
     } else if (element.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.DELETE)) {
       // 删除
       val deleteRequest: DeleteRequest = Requests.deleteRequest(syncConfig.syncEs6.esIndex)
-        .`type`(syncConfig.syncEs6.esType)
+        .`type`(element.get("value").get("database").asText())
         .id(map.get(splitArr(0)))
       indexer.add(deleteRequest)
       log.info(s"delete data $map from es...")
