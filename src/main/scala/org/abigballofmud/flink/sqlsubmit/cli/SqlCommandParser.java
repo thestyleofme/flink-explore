@@ -22,6 +22,8 @@ public final class SqlCommandParser {
         // private
     }
 
+    private static final String SQL_SPIT = ";";
+
     public static List<SqlCommandCall> parse(List<String> lines) {
         List<SqlCommandCall> calls = new ArrayList<>();
         StringBuilder stmt = new StringBuilder();
@@ -49,7 +51,7 @@ public final class SqlCommandParser {
         // normalize
         stmt = stmt.trim();
         // remove ';' at the end
-        if (stmt.endsWith(";")) {
+        if (stmt.endsWith(SQL_SPIT)) {
             stmt = stmt.substring(0, stmt.length() - 1).trim();
         }
 
@@ -81,6 +83,7 @@ public final class SqlCommandParser {
     /**
      * Supported SQL commands.
      */
+    @SuppressWarnings("unused")
     public enum SqlCommand {
         /**
          * INSERT_INTO
@@ -129,6 +132,7 @@ public final class SqlCommandParser {
     /**
      * Call of SQL command with operands and command type.
      */
+    @SuppressWarnings("unused")
     public static class SqlCommandCall {
         public final SqlCommand command;
         public final String[] operands;
