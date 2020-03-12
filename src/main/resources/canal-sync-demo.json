@@ -4,7 +4,29 @@
     "sourceSchema": "hdsp_test",
     "sourceTable": "dev_common_test",
     "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
-    "writeType": "hive"
+    "writeType": "hbase"
+  },
+  "sourceKafka": {
+    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
+    "kafkaTopic": "example",
+    "initDefaultOffset": "{\"0\":6960}"
+  },
+  "syncHbase": {
+    "quorum": "hdsp001:2181,hdsp002:2181,hdsp003:2181",
+    "rootDir": "hdfs://hdsp001:8020/apps/hbase/data",
+    "znodeParent": "/hbase-unsecure",
+    "namespace": "isacc",
+    "table": "dev_test",
+    "batchSize": 1,
+    "columns": [
+      {
+        "family": "cf1",
+        "cols": [
+          "name",
+          "create_date"
+        ]
+      }
+    ]
   },
   "syncHive": {
     "hdfsPath": "hdfs://hdsp001:8020/data/flink-test",
@@ -27,11 +49,6 @@
     "esSchema": "http",
     "esIndex": "flink_es_test",
     "bulkFlushMaxActions": 1
-  },
-  "sourceKafka": {
-    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
-    "kafkaTopic": "example",
-    "initDefaultOffset": "{\"0\":6500}"
   },
   "syncKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",

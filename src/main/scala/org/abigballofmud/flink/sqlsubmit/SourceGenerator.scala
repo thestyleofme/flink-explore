@@ -23,6 +23,7 @@ object SourceGenerator {
     val logStream: DataStream[String] = env.readTextFile("src/main/resources/user_behavior.log")
     val properties = new Properties()
     properties.setProperty("bootstrap.servers", "hdsp001:6667,hdsp002:6667,hdsp003:6667")
+    properties.setProperty("batch.size", "16384")
     logStream.addSink(new FlinkKafkaProducer[String](
       "user_behavior",
       new StringKafkaSerializationSchema("user_behavior", 1),

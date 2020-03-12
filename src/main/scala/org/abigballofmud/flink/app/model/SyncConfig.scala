@@ -14,5 +14,6 @@ case class SyncConfig(syncFlink: SyncFlink,
                       syncKafka: SyncKafka,
                       syncEs6: SyncEs6,
                       syncRedis: SyncRedis,
-                      syncHive: SyncHive
+                      syncHive: SyncHive,
+                      syncHbase: SyncHbase
                      ) extends Serializable

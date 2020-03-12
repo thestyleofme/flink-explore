@@ -15,4 +15,5 @@ public interface WriteTypeConstant {
     String ELASTICSEARCH6 = "elasticsearch6";
     String REDIS = "redis";
     String HIVE = "hive";
+    String HBASE = "hbase";
 }

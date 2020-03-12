@@ -9,7 +9,7 @@ import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.udf.filter.SchemaAndTableFilter
 import org.abigballofmud.flink.app.udf.kafka.SyncKafkaSerializationSchema
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.{Es6Writer, HiveWriter, JdbcWriter, RedisWriter}
+import org.abigballofmud.flink.app.writers.{Es6Writer, HBaseSink, HiveWriter, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
@@ -88,6 +88,7 @@ object SyncApp {
         // 写入另一个topic
         val properties = new Properties()
         properties.setProperty("bootstrap.servers", syncConfig.syncKafka.kafkaBootstrapServers)
+        properties.setProperty("batch.size", "16384")
         kafkaStream.addSink(new FlinkKafkaProducer[ObjectNode](
           syncConfig.syncKafka.kafkaTopic,
           new SyncKafkaSerializationSchema(syncConfig.syncKafka.kafkaTopic),
@@ -103,6 +104,8 @@ object SyncApp {
       case WriteTypeConstant.HIVE =>
         // 通过写文件方式写入hive
         HiveWriter.doWrite(syncConfig, kafkaStream)
+      case WriteTypeConstant.HBASE =>
+        kafkaStream.addSink(new HBaseSink(syncConfig))
       case _ => throw new IllegalArgumentException("unsupported writeType")
     }
   }
