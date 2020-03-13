@@ -16,4 +16,5 @@ public interface WriteTypeConstant {
     String REDIS = "redis";
     String HIVE = "hive";
     String HBASE = "hbase";
+    String PHOENIX = "phoenix";
 }

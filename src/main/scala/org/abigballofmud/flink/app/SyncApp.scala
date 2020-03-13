@@ -7,9 +7,10 @@ import com.typesafe.scalalogging.Logger
 import org.abigballofmud.flink.app.constansts.WriteTypeConstant
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.udf.filter.SchemaAndTableFilter
+import org.abigballofmud.flink.app.udf.hbase.HBaseSink
 import org.abigballofmud.flink.app.udf.kafka.SyncKafkaSerializationSchema
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
-import org.abigballofmud.flink.app.writers.{Es6Writer, HBaseSink, HiveWriter, JdbcWriter, RedisWriter}
+import org.abigballofmud.flink.app.writers.{Es6Writer, HiveWriter, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}

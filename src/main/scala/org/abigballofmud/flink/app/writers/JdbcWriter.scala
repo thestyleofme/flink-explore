@@ -3,7 +3,7 @@ package org.abigballofmud.flink.app.writers
 import java.util.Objects
 
 import com.typesafe.scalalogging.Logger
-import org.abigballofmud.flink.app.constansts.CommonConstant
+import org.abigballofmud.flink.app.constansts.{CommonConstant, DbTypeConstant}
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
 import org.apache.flink.api.java.io.jdbc.JDBCOutputFormat
@@ -27,11 +27,14 @@ object JdbcWriter {
   private val log = Logger(LoggerFactory.getLogger(JdbcWriter.getClass))
 
   def doWrite(processedDataStream: DataStream[ObjectNode], syncConfig: SyncConfig): Unit = {
+    if (syncConfig.syncJdbc.dbType.equalsIgnoreCase(DbTypeConstant.PHOENIX)) {
+      System.setProperty("HADOOP_USER_NAME", "hbase")
+    }
     // 注意字段顺序以及类型 注意字段顺序以及类型 注意字段顺序以及类型 !!!!
-    if (Objects.nonNull(syncConfig.syncJdbc.replace)) {
+    if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
       log.info("use replace into...")
-      val replaceDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.REPLACE).map(SyncJdbcUtil.canalInsertTransformToRow)
-      handleJdbc(replaceDataStream, syncConfig, CommonConstant.REPLACE)
+      val replaceDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.UPSERT).map(SyncJdbcUtil.canalInsertTransformToRow)
+      handleJdbc(replaceDataStream, syncConfig, CommonConstant.UPSERT)
     } else {
       val insertDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.INSERT).map(SyncJdbcUtil.canalInsertTransformToRow)
       val updateDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.UPDATE).map(SyncJdbcUtil.canalUpdateTransformToRow)
@@ -60,9 +63,9 @@ object JdbcWriter {
       case CommonConstant.INSERT => builder
         .setQuery(syncConfig.syncJdbc.insert.query)
         .setSqlTypes(syncConfig.syncJdbc.insert.sqlTypes)
-      case CommonConstant.REPLACE => builder
-        .setQuery(syncConfig.syncJdbc.replace.query)
-        .setSqlTypes(syncConfig.syncJdbc.replace.sqlTypes)
+      case CommonConstant.UPSERT => builder
+        .setQuery(syncConfig.syncJdbc.upsert.query)
+        .setSqlTypes(syncConfig.syncJdbc.upsert.sqlTypes)
       case CommonConstant.UPDATE => builder
         .setQuery(syncConfig.syncJdbc.update.query)
         .setSqlTypes(syncConfig.syncJdbc.update.sqlTypes)

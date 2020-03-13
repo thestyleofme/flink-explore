@@ -35,9 +35,9 @@ object SyncJdbcUtil {
     val deleteSqlTypes: Array[Int] = genSqlType(syncConfig, syncConfig.syncJdbc.delete)
     syncConfig.syncJdbc.delete.sqlTypes = deleteSqlTypes
     // 判断是否配置了replace
-    if (Objects.nonNull(syncConfig.syncJdbc.replace)) {
-      val replaceSqlTypes: Array[Int] = genSqlType(syncConfig, syncConfig.syncJdbc.replace)
-      syncConfig.syncJdbc.replace.sqlTypes = replaceSqlTypes
+    if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
+      val replaceSqlTypes: Array[Int] = genSqlType(syncConfig, syncConfig.syncJdbc.upsert)
+      syncConfig.syncJdbc.upsert.sqlTypes = replaceSqlTypes
     } else {
       val updateSqlTypes: Array[Int] = genSqlType(syncConfig, syncConfig.syncJdbc.update)
       syncConfig.syncJdbc.update.sqlTypes = updateSqlTypes

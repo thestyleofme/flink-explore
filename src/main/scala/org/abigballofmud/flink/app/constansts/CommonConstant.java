@@ -12,7 +12,7 @@ public interface CommonConstant {
 
     String INSERT = "INSERT";
     String UPDATE = "UPDATE";
-    String REPLACE = "REPLACE";
+    String UPSERT  = "UPSERT";
     String DELETE = "DELETE";
 
     String KAFKA_INIT_OFFSET_LATEST = "latest";

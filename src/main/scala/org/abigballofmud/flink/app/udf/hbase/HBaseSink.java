@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.app.writers;
+package org.abigballofmud.flink.app.udf.hbase;
 
 import java.util.HashMap;
 import java.util.List;

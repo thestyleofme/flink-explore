@@ -13,6 +13,7 @@ package org.abigballofmud.flink.app.model
  * @param schema        数据库
  * @param table         写入的表名
  * @param batchInterval 批次大小，可根据源表的数据变化情况动态设置，若变化比较大，批次可设置大一点，变化小，可调小
+ * @param upsert        upsert的sql
  * @param update        update的sql
  * @param insert        insert的sql
  * @param delete        delete的sql
@@ -27,7 +28,7 @@ case class SyncJdbc(dbType: String,
                     schema: String,
                     table: String,
                     batchInterval: Int = 1,
-                    var replace: QueryAndSqlType,
+                    var upsert: QueryAndSqlType,
                     var update: QueryAndSqlType,
                     var insert: QueryAndSqlType,
                     var delete: QueryAndSqlType) extends Serializable

@@ -42,7 +42,7 @@ object CommonUtil {
 
   val UPDATE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPDATE)
   val INSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.INSERT)
-  val REPLACE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.REPLACE)
+  val UPSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPSERT)
   val DELETE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.DELETE)
 
   /**
@@ -110,6 +110,10 @@ object CommonUtil {
     env.setStateBackend(fsStateBackend)
   }
 
+  def getEventType(value: ObjectNode): String = {
+    value.get("value").get("type").asText
+  }
+
   /**
    * 对kafka数据分流
    *
@@ -120,11 +124,11 @@ object CommonUtil {
   def splitDataStream(kafkaStream: DataStream[ObjectNode], syncConfig: SyncConfig): DataStream[ObjectNode] = {
     kafkaStream.process(new ProcessFunction[ObjectNode, ObjectNode] {
       override def processElement(value: ObjectNode, ctx: ProcessFunction[ObjectNode, ObjectNode]#Context, out: Collector[ObjectNode]): Unit = {
-        if (Objects.nonNull(syncConfig.syncJdbc.replace)) {
+        if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
           // 配置了replace 两批
           if (value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.UPDATE) ||
             value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.INSERT)) {
-            ctx.output(REPLACE, value)
+            ctx.output(UPSERT, value)
           }
         } else {
           // 未配置replace 三批

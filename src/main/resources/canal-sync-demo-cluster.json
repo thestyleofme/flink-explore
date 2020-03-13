@@ -46,7 +46,7 @@
     "schema": "hdsp_test",
     "table": "dev_common_test_copy",
     "batchInterval": 1,
-    "replace": {
+    "upsert": {
       "query": "REPLACE INTO `hdsp_test`.`dev_common_test_copy`(`id`,`name`,`create_date`) values(?, ?, ?)",
       "colTypes": "INT, VARCHAR, DATETIME"
     },
