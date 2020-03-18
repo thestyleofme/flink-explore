@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 import com.google.gson.reflect.TypeToken
 import com.typesafe.scalalogging.Logger
 import org.abigballofmud.flink.app.SyncApp.gson
-import org.abigballofmud.flink.app.constansts.CommonConstant
+import org.abigballofmud.flink.app.constansts.{CommonConstant, KafkaSourceFrom}
 import org.abigballofmud.flink.app.model.SyncConfig
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.time.Time
@@ -124,21 +124,27 @@ object CommonUtil {
   def splitDataStream(kafkaStream: DataStream[ObjectNode], syncConfig: SyncConfig): DataStream[ObjectNode] = {
     kafkaStream.process(new ProcessFunction[ObjectNode, ObjectNode] {
       override def processElement(value: ObjectNode, ctx: ProcessFunction[ObjectNode, ObjectNode]#Context, out: Collector[ObjectNode]): Unit = {
+        var eventType: String = null
+        if (KafkaSourceFrom.ORACLE_KAFKA_CONNECTOR.equalsIgnoreCase(syncConfig.sourceKafka.sourceFrom)) {
+          eventType = value.get("value").get("payload").get("OPERATION").asText()
+        } else {
+          eventType = value.get("value").get("type").asText()
+        }
         if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
           // 配置了replace 两批
-          if (value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.UPDATE) ||
-            value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.INSERT)) {
+          if (eventType.equalsIgnoreCase(CommonConstant.UPDATE) ||
+            eventType.equalsIgnoreCase(CommonConstant.INSERT)) {
             ctx.output(UPSERT, value)
           }
         } else {
           // 未配置replace 三批
-          if (value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.UPDATE)) {
+          if (eventType.equalsIgnoreCase(CommonConstant.UPDATE)) {
             ctx.output(UPDATE, value)
-          } else if (value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.INSERT)) {
+          } else if (eventType.equalsIgnoreCase(CommonConstant.INSERT)) {
             ctx.output(INSERT, value)
           }
         }
-        if (value.get("value").get("type").asText().equalsIgnoreCase(CommonConstant.DELETE)) {
+        if (eventType.equalsIgnoreCase(CommonConstant.DELETE)) {
           ctx.output(DELETE, value)
         } else {
           // 其他

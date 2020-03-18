@@ -24,6 +24,7 @@
         <!--        <phoenix.version>5.0.0-HBase-2.0</phoenix.version>-->
         <phoenix.version>5.0.0.3.1.0.0-78</phoenix.version>
         <commons-cli.version>1.3.1</commons-cli.version>
+        <oracle.version>12.1.0.2</oracle.version>
     </properties>
 
     <dependencies>
@@ -199,6 +200,12 @@
             <artifactId>hbase-server</artifactId>
             <version>${hbase.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.el</artifactId>
+                    <groupId>org.glassfish</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
@@ -302,13 +309,20 @@
             </exclusions>
         </dependency>
 
-        <!-- mysql-->
+        <!-- 数据库-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.48</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc7</artifactId>
+            <version>${oracle.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- other-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -320,6 +334,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b11</version>
+            </dependency>
             <!-- flink 与 hadoop jar冲突 这里以flink的为准-->
             <dependency>
                 <groupId>org.apache.calcite.avatica</groupId>

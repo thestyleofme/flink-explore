@@ -3,9 +3,9 @@ package org.abigballofmud.flink.app.writers
 import java.util.Objects
 
 import com.typesafe.scalalogging.Logger
-import org.abigballofmud.flink.app.constansts.{CommonConstant, DbTypeConstant}
+import org.abigballofmud.flink.app.constansts.{CommonConstant, DbTypeConstant, KafkaSourceFrom}
 import org.abigballofmud.flink.app.model.SyncConfig
-import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
+import org.abigballofmud.flink.app.utils.{CommonUtil, OracleSyncJdbcUtil, SyncJdbcUtil}
 import org.apache.flink.api.java.io.jdbc.JDBCOutputFormat
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 import org.apache.flink.streaming.api.scala._
@@ -33,17 +33,37 @@ object JdbcWriter {
     // 注意字段顺序以及类型 注意字段顺序以及类型 注意字段顺序以及类型 !!!!
     if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
       log.info("use replace into...")
-      val replaceDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.UPSERT).map(SyncJdbcUtil.canalInsertTransformToRow)
+      val replaceDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.UPSERT)
+        .map(SyncJdbcUtil.canalInsertTransformToRow)
       handleJdbc(replaceDataStream, syncConfig, CommonConstant.UPSERT)
     } else {
-      val insertDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.INSERT).map(SyncJdbcUtil.canalInsertTransformToRow)
-      val updateDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.UPDATE).map(SyncJdbcUtil.canalUpdateTransformToRow)
+      var insertDataStream: DataStream[Row] = null
+      var updateDataStream: DataStream[Row] = null
+      if (syncConfig.sourceKafka.sourceFrom.equalsIgnoreCase(KafkaSourceFrom.CANAL)) {
+        insertDataStream = processedDataStream.getSideOutput(CommonUtil.INSERT)
+          .map(SyncJdbcUtil.canalInsertTransformToRow)
+        updateDataStream = processedDataStream.getSideOutput(CommonUtil.UPDATE)
+          .map(SyncJdbcUtil.canalUpdateTransformToRow)
+      } else if (syncConfig.sourceKafka.sourceFrom.equalsIgnoreCase(KafkaSourceFrom.ORACLE_KAFKA_CONNECTOR)) {
+        insertDataStream = processedDataStream.getSideOutput(CommonUtil.INSERT)
+          .map(OracleSyncJdbcUtil.insertTransformToRow(syncConfig))
+        updateDataStream = processedDataStream.getSideOutput(CommonUtil.UPDATE)
+          .map(OracleSyncJdbcUtil.updateTransformToRow(syncConfig))
+      }
       handleJdbc(insertDataStream, syncConfig, CommonConstant.INSERT)
       handleJdbc(updateDataStream, syncConfig, CommonConstant.UPDATE)
     }
-    val deleteDataStream: DataStream[Row] = processedDataStream.getSideOutput(CommonUtil.DELETE).map(SyncJdbcUtil.canalDeleteTransformToRow)
+    var deleteDataStream: DataStream[Row] = null
+    if (syncConfig.sourceKafka.sourceFrom.equalsIgnoreCase(KafkaSourceFrom.CANAL)) {
+      deleteDataStream = processedDataStream.getSideOutput(CommonUtil.DELETE)
+        .map(SyncJdbcUtil.canalDeleteTransformToRow)
+    } else if (syncConfig.sourceKafka.sourceFrom.equalsIgnoreCase(KafkaSourceFrom.ORACLE_KAFKA_CONNECTOR)) {
+      deleteDataStream = processedDataStream.getSideOutput(CommonUtil.DELETE)
+        .map(OracleSyncJdbcUtil.deleteTransformToRow(syncConfig))
+    }
     handleJdbc(deleteDataStream, syncConfig, CommonConstant.DELETE)
   }
+
 
   /**
    * 实时同步

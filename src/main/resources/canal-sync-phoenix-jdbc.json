@@ -9,7 +9,8 @@
   "sourceKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
     "kafkaTopic": "example",
-    "initDefaultOffset": "earliest"
+    "initDefaultOffset": "earliest",
+    "sourceFrom": "CANAL"
   },
   "syncJdbc": {
     "dbType": "PHOENIX",

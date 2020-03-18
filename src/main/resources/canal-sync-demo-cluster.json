@@ -30,7 +30,8 @@
   "sourceKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
     "kafkaTopic": "example",
-    "initDefaultOffset": "{\"0\":6500}"
+    "initDefaultOffset": "{\"0\":6500}",
+    "sourceFrom": "CANAL"
   },
   "syncKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",

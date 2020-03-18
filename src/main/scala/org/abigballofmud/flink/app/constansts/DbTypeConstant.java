@@ -11,4 +11,6 @@ package org.abigballofmud.flink.app.constansts;
 public interface DbTypeConstant {
 
     String PHOENIX = "PHOENIX";
+    String ORACLE = "ORACLE";
+    String MYSQL = "MYSQL";
 }

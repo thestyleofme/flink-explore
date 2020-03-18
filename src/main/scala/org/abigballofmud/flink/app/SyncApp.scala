@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory
  * @author isacc 2020/02/25 14:55
  * @since 1.0
  */
+//noinspection DuplicatedCode
 object SyncApp {
 
   private val log = Logger(LoggerFactory.getLogger(SyncApp.getClass))
@@ -82,7 +83,7 @@ object SyncApp {
       case WriteTypeConstant.JDBC =>
         // 根据字段类型生成sqlType
         SyncJdbcUtil.genSqlTypes(syncConfig)
-        // 分流，若配置了replace就分为两批，没有则三批
+        // 分流，若配置了upsert就分为两批，没有则三批
         val processedDataStream: DataStream[ObjectNode] = CommonUtil.splitDataStream(kafkaStream, syncConfig)
         JdbcWriter.doWrite(processedDataStream, syncConfig)
       case WriteTypeConstant.KAFKA =>

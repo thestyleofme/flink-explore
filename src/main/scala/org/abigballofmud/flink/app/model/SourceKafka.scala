@@ -8,9 +8,11 @@ package org.abigballofmud.flink.app.model
  * @param kafkaBootstrapServers kafkaBootstrapServers
  * @param kafkaTopic            topic
  * @param initDefaultOffset     初始offset
+ * @param sourceFrom            kafka来源，如DEBEZIUM/KAFKA_CONNECTOR/CANAL
  * @author isacc 2020/03/06 14:41
  * @since 1.0
  */
 case class SourceKafka(kafkaBootstrapServers: String,
                        kafkaTopic: String,
-                       initDefaultOffset: String) extends Serializable
+                       initDefaultOffset: String,
+                       sourceFrom: String) extends Serializable
