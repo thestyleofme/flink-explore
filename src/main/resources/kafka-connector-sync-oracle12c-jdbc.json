@@ -9,7 +9,7 @@
   "sourceKafka": {
     "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
     "kafkaTopic": "kafka_oracle_test",
-    "initDefaultOffset": "earliest",
+    "initDefaultOffset": "latest",
     "sourceFrom": "ORACLE_KAFKA_CONNECTOR"
   },
   "syncJdbc": {

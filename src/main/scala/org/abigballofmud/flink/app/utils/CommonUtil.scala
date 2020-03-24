@@ -97,7 +97,7 @@ object CommonUtil {
   def toleranceOption(env: StreamExecutionEnvironment, syncConfig: SyncConfig): Unit = {
     // checkpoint设置
     val checkpointConfig: CheckpointConfig = env.getCheckpointConfig
-    checkpointConfig.setCheckpointInterval(5000L)
+    checkpointConfig.setCheckpointInterval(60 * 1000L)
     checkpointConfig.setTolerableCheckpointFailureNumber(1)
     checkpointConfig.enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION)
     checkpointConfig.setMaxConcurrentCheckpoints(1)
