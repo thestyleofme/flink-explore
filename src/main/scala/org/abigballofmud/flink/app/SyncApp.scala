@@ -12,7 +12,6 @@ import org.abigballofmud.flink.app.udf.kafka.SyncKafkaSerializationSchema
 import org.abigballofmud.flink.app.utils.{CommonUtil, SyncJdbcUtil}
 import org.abigballofmud.flink.app.writers.{Es6Writer, HiveWriter, JdbcWriter, RedisWriter}
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
-import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.JSONKeyValueDeserializationSchema
@@ -51,7 +50,6 @@ object SyncApp {
     System.setProperty("user.name", "hive")
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     // 获取flink执行配置
     val syncConfig: SyncConfig = CommonUtil.genSyncConfig(args)
     log.info("flink config file load success")
