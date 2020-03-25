@@ -1,0 +1,33 @@
+{
+  "syncFlink": {
+    "jobName": "flink_mysql_realtime_sync",
+    "sourceSchema": "hdsp_test",
+    "sourceTable": "dev_common_test",
+    "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
+    "writeType": "jdbc"
+  },
+  "sourceKafka": {
+    "kafkaBootstrapServers": "hdsp001:6667,hdsp002:6667,hdsp003:6667",
+    "kafkaTopic": "example",
+    "initDefaultOffset": "earliest",
+    "sourceFrom": "CANAL"
+  },
+  "syncJdbc": {
+    "dbType": "PHOENIX",
+    "driver": "org.apache.phoenix.jdbc.PhoenixDriver",
+    "jdbcUrl": "jdbc:phoenix:hdsp001,hdsp002,hdsp003:2181:/hbase-unsecure;autocommit=true",
+    "user": "",
+    "pwd": "",
+    "schema": "hdsp_test",
+    "table": "dev_common_test",
+    "batchInterval": 1,
+    "upsert": {
+      "query": "UPSERT INTO hdsp_test.dev_common_test(id,name,create_date) values(?, ?, ?)",
+      "colTypes": "INT, VARCHAR, DATETIME"
+    },
+    "delete": {
+      "query": "DELETE FROM hdsp_test.dev_common_test where id = ?",
+      "colTypes": "INT"
+    }
+  }
+}
