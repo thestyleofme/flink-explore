@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.practice.apitest
+package org.abigballofmud.flink.practice.apitest.source
 
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.scala._

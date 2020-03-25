@@ -3,8 +3,7 @@ package org.abigballofmud.flink.practice.apitest.sinktest.jdbc
 import java.sql.{Connection, DriverManager, PreparedStatement}
 import java.util.Objects
 
-import org.abigballofmud.flink.practice.apitest.{SensorReading, SensorSource}
-import org.abigballofmud.flink.practice.apitest.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.{SensorReading, SensorSource}
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.{RichSinkFunction, SinkFunction}
 import org.apache.flink.streaming.api.scala._

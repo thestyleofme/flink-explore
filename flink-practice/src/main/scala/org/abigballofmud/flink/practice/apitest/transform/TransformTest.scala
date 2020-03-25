@@ -1,9 +1,8 @@
-package org.abigballofmud.flink.practice.apitest
+package org.abigballofmud.flink.practice.apitest.transform
 
-import org.apache.flink.api.common.functions.{FilterFunction, RichFilterFunction}
-import org.apache.flink.streaming.api.functions.ProcessFunction
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
+import org.apache.flink.api.common.functions.FilterFunction
 import org.apache.flink.streaming.api.scala._
-import org.apache.flink.util.Collector
 
 /**
  * <p>

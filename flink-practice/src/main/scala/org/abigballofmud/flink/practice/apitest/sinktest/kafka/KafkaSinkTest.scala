@@ -3,7 +3,7 @@ package org.abigballofmud.flink.practice.apitest.sinktest.kafka
 import java.util.Properties
 
 import com.google.gson.Gson
-import org.abigballofmud.flink.practice.apitest.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer
 

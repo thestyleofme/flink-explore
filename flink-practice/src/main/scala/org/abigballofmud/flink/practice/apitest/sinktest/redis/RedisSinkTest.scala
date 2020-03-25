@@ -1,6 +1,6 @@
 package org.abigballofmud.flink.practice.apitest.sinktest.redis
 
-import org.abigballofmud.flink.practice.apitest.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.redis.RedisSink
 import org.apache.flink.streaming.connectors.redis.common.config.FlinkJedisPoolConfig

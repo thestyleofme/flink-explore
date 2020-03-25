@@ -1,12 +1,12 @@
 package org.abigballofmud.flink.practice.apitest.window
 
-import org.abigballofmud.flink.practice.apitest.SensorReading
-import org.abigballofmud.flink.practice.apitest.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 import org.apache.flink.streaming.api.functions.{AssignerWithPeriodicWatermarks, AssignerWithPunctuatedWatermarks}
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.watermark.Watermark
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 
 /**
@@ -44,7 +44,11 @@ object WindowTest {
     val minTemperaturePerWindowStream: DataStream[(String, Double)] = dataStream
       .map(data => (data.id, data.temperature))
       .keyBy(_._1)
-      .timeWindow(Time.seconds(15), Time.seconds(5)) // 开窗
+      // 可以去了解下滑动/滚动窗口的计算公式
+      // org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows.assignWindows
+      // org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows.assignWindows
+      .window(SlidingEventTimeWindows.of(Time.seconds(15), Time.seconds(5), Time.hours(-8)))
+      //      .timeWindow(Time.seconds(15), Time.seconds(5)) // 开窗
       .reduce((data1, data2) => (data1._1, data1._2.min(data2._2))) // reduce做增量聚合
 
     minTemperaturePerWindowStream.print("min temp")

@@ -28,7 +28,6 @@
     </properties>
 
     <dependencies>
-        <!-- flink-->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-scala_2.11</artifactId>
@@ -286,7 +285,6 @@
             <artifactId>clickhouse-jdbc</artifactId>
             <version>0.2.4</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>

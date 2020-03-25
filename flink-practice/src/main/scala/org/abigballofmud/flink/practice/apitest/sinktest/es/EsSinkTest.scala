@@ -2,8 +2,8 @@ package org.abigballofmud.flink.practice.apitest.sinktest.es
 
 import java.util
 
-import org.abigballofmud.flink.practice.apitest.SensorReading
-import org.abigballofmud.flink.practice.apitest.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
+import org.abigballofmud.flink.practice.apitest.source.SensorReading
 import org.apache.flink.api.common.functions.RuntimeContext
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.elasticsearch.{ElasticsearchSinkFunction, RequestIndexer}
