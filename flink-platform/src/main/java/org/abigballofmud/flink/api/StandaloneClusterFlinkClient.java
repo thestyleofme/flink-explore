@@ -1,10 +1,12 @@
-package org.abigballofmud.flink.client;
+package org.abigballofmud.flink.api;
 
 import java.util.function.Consumer;
 
 import lombok.extern.slf4j.Slf4j;
-import org.abigballofmud.flink.client.request.SubmitRequest;
-import org.abigballofmud.flink.client.response.SubmitFlinkResponse;
+import org.abigballofmud.flink.api.loader.JarLoader;
+import org.abigballofmud.flink.api.request.JarSubmitFlinkRequest;
+import org.abigballofmud.flink.api.request.SubmitRequest;
+import org.abigballofmud.flink.api.response.SubmitFlinkResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.client.program.ClusterClient;
 
@@ -24,7 +26,10 @@ public class StandaloneClusterFlinkClient<T extends ClusterClient> extends Abstr
 
     private final String webInterfaceUrl;
 
-    public StandaloneClusterFlinkClient(T clusterClient, String webInterfaceUrl) {
+    public StandaloneClusterFlinkClient(T clusterClient,
+                                        JarLoader jarLoader,
+                                        String webInterfaceUrl) {
+        super(jarLoader);
         this.clusterClient = clusterClient;
         this.webInterfaceUrl = webInterfaceUrl;
     }
@@ -32,6 +37,11 @@ public class StandaloneClusterFlinkClient<T extends ClusterClient> extends Abstr
     @Override
     public void submit(SubmitRequest request, Consumer<SubmitFlinkResponse> consumer) {
         log.debug("submit");
+        if (request instanceof JarSubmitFlinkRequest) {
+            submitJar(clusterClient, (JarSubmitFlinkRequest) request, consumer);
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override

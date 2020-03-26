@@ -4,9 +4,7 @@ import java.io.Serializable;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.abigballofmud.flink.domain.enumerations.ClusterType;
 
 /**
@@ -18,7 +16,9 @@ import org.abigballofmud.flink.domain.enumerations.ClusterType;
  * @since 1.0
  */
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClusterDTO implements Serializable {

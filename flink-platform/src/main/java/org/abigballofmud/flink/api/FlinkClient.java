@@ -1,9 +1,9 @@
-package org.abigballofmud.flink.client;
+package org.abigballofmud.flink.api;
 
 import java.util.function.Consumer;
 
-import org.abigballofmud.flink.client.request.SubmitRequest;
-import org.abigballofmud.flink.client.response.SubmitFlinkResponse;
+import org.abigballofmud.flink.api.request.SubmitRequest;
+import org.abigballofmud.flink.api.response.SubmitFlinkResponse;
 
 /**
  * <p>

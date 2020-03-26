@@ -1,8 +1,9 @@
-package org.abigballofmud.flink.client;
+package org.abigballofmud.flink.api;
 
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.abigballofmud.flink.api.loader.JarLoader;
 import org.abigballofmud.flink.domain.enumerations.ClusterType;
 import org.abigballofmud.flink.execeptions.CommonException;
 import org.abigballofmud.flink.service.dto.ClusterDTO;
@@ -22,12 +23,16 @@ import org.apache.flink.configuration.RestOptions;
  */
 public class ClusterClientFactory {
 
-    public static FlinkClient get(ClusterDTO cluster) throws JsonProcessingException {
+    private ClusterClientFactory() {
+        throw new IllegalStateException();
+    }
+
+    public static FlinkClient get(ClusterDTO cluster, JarLoader jarLoader) throws JsonProcessingException {
         ClusterType clusterType = cluster.getType();
         switch (clusterType) {
             case STANDALONE:
                 StandaloneClusterInfo clusterInfo = BindPropertiesUtil.bindProperties(cluster.getConfig(), StandaloneClusterInfo.class);
-                return createRestClient(clusterInfo);
+                return createRestClient(clusterInfo, jarLoader);
             case YARN:
                 // todo 支持yarn cluster
             default:
@@ -35,7 +40,7 @@ public class ClusterClientFactory {
         }
     }
 
-    public static FlinkClient createRestClient(StandaloneClusterInfo clusterInfo) {
+    public static FlinkClient createRestClient(StandaloneClusterInfo clusterInfo, JarLoader jarLoader) {
         Configuration configuration = new Configuration();
         if (clusterInfo.getProperties() != null) {
             setProperties(clusterInfo.getProperties(), configuration);
@@ -43,12 +48,13 @@ public class ClusterClientFactory {
         configuration.setString(JobManagerOptions.ADDRESS, clusterInfo.getAddress());
         configuration.setInteger(JobManagerOptions.PORT, clusterInfo.getPort());
         configuration.setInteger(RestOptions.PORT, clusterInfo.getPort());
-        return createClient(configuration, clusterInfo.getWebInterfaceUrl());
+        return createClient(configuration, jarLoader, clusterInfo.getWebInterfaceUrl());
     }
 
-    private static FlinkClient createClient(Configuration configuration, String webUrl) {
+    @SuppressWarnings("rawtypes")
+    private static FlinkClient createClient(Configuration configuration, JarLoader jarLoader, String webUrl) {
         try (RestClusterClient<String> restClient = new RestClusterClient<>(configuration, "RemoteExecutor")) {
-            return new StandaloneClusterFlinkClient<>(restClient, webUrl);
+            return new StandaloneClusterFlinkClient<RestClusterClient>(restClient, jarLoader, webUrl);
         } catch (Exception e) {
             throw new CommonException("Cannot establish connection to JobManager: " + e.getMessage(), e);
         }

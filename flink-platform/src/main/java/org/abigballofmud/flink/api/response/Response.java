@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.client.response;
+package org.abigballofmud.flink.api.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

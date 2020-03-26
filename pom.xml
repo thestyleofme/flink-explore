@@ -13,6 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <slf4j.log4j12.version>1.7.21</slf4j.log4j12.version>
@@ -28,6 +30,7 @@
         <module>flink-practice</module>
         <module>flink-platform</module>
         <module>flink-common</module>
+        <module>flink-client</module>
     </modules>
 
     <dependencyManagement>

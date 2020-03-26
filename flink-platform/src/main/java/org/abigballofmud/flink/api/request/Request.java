@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.client.request;
+package org.abigballofmud.flink.api.request;
 
 /**
  * <p>
