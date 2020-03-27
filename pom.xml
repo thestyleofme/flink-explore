@@ -30,11 +30,15 @@
         <module>flink-practice</module>
         <module>flink-platform</module>
         <module>flink-common</module>
-        <module>flink-client</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b11</version>
+            </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>

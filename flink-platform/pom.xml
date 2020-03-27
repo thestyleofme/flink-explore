@@ -36,6 +36,11 @@
         <!-- flink-->
         <dependency>
             <groupId>org.abigballofmud.flink</groupId>
+            <artifactId>flink-api-spring-boot-starter</artifactId>
+            <version>1.0.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.abigballofmud.flink</groupId>
             <artifactId>flink-common</artifactId>
             <version>${project.parent.version}</version>
             <scope>provided</scope>
