@@ -1,9 +1,13 @@
-package org.abigballofmud.flink.platform.api.dto;
+package org.abigballofmud.flink.platform.domain.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -21,12 +25,14 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClusterDTO implements Serializable {
+@TableName(value = "cluster")
+public class Cluster implements Serializable {
 
     private static final long serialVersionUID = 854464206375410197L;
 
-    public static final String FIELD_CLUSTER_ID = "clusterId";
+    public static final String FIELD_CLUSTER_ID = "cluster_id";
 
+    @TableId(type = IdType.AUTO)
     private Long clusterId;
 
     @NotBlank
@@ -44,6 +50,7 @@ public class ClusterDTO implements Serializable {
     private Integer enabledFlag;
 
     private Long tenantId;
+    @Version
     private Long objectVersionNumber;
     private LocalDateTime creationDate;
     private Long createdBy;

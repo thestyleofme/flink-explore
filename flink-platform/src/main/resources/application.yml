@@ -1,2 +1,33 @@
 server:
   port: 9527
+spring:
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      datasource:
+        master:
+          username: root
+          password: tse@9527
+          driver-class-name: com.mysql.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/flink_explore?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      hikari:
+        min-idle: 10
+        max-pool-size: 15
+        is-auto-commit: true
+        idle-timeout: 30000
+        pool-name: ExpendHikariCP
+        max-lifetime: 1800000
+        connection-timeout: 30000
+        connection-test-query: SELECT 1
+
+mybatis:
+  mapperLocations: classpath*:/mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+
+logging:
+  level:
+    org.abigballofmud.flink: debug
+    com.baomidou.dynamic: debug
+  file:
+    name: logs/flink_platform.log

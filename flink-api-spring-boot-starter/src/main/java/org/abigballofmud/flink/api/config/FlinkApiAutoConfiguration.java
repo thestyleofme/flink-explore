@@ -1,6 +1,6 @@
 package org.abigballofmud.flink.api.config;
 
-import org.abigballofmud.flink.api.client.FlinkApi;
+import org.abigballofmud.flink.api.context.FlinkApiContext;
 import org.abigballofmud.flink.api.execeptions.RestTemplateErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,8 +22,8 @@ import org.springframework.web.client.RestTemplate;
 public class FlinkApiAutoConfiguration {
 
     @Bean
-    public FlinkApi flinkApi(RestTemplate restTemplate) {
-        return new FlinkApi(restTemplate);
+    public FlinkApiContext flinkApiContext(RestTemplate restTemplate) {
+        return new FlinkApiContext(restTemplate);
     }
 
     @Bean("flinkRestTemplate")

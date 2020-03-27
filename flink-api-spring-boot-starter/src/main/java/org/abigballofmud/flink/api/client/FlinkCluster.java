@@ -21,6 +21,8 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 public class FlinkCluster {
 
+    @NotBlank
+    private String clusterCode;
     /**
      * jobManager地址
      */
