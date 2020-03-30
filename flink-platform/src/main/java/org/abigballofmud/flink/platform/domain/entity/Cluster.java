@@ -25,7 +25,7 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@TableName(value = "cluster")
+@TableName(value = "flink_cluster")
 public class Cluster implements Serializable {
 
     private static final long serialVersionUID = 854464206375410197L;

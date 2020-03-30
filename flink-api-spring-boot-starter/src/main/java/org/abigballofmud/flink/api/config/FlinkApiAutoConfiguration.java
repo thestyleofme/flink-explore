@@ -1,7 +1,7 @@
 package org.abigballofmud.flink.api.config;
 
 import org.abigballofmud.flink.api.context.FlinkApiContext;
-import org.abigballofmud.flink.api.execeptions.RestTemplateErrorHandler;
+import org.abigballofmud.flink.api.exceptions.RestTemplateErrorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

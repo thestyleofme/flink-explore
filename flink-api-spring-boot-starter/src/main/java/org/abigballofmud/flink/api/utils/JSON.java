@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import org.abigballofmud.flink.api.execeptions.FlinkCommonException;
+import org.abigballofmud.flink.api.exceptions.FlinkCommonException;
 
 /**
  * <p>

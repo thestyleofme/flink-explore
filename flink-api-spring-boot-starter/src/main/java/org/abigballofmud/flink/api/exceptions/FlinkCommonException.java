@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.api.execeptions;
+package org.abigballofmud.flink.api.exceptions;
 
 /**
  * <p>

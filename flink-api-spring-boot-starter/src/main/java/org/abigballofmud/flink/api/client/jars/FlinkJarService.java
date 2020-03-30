@@ -11,14 +11,14 @@ import org.abigballofmud.flink.api.constants.FlinkApiConstant;
 import org.abigballofmud.flink.api.domain.jars.JarRunRequest;
 import org.abigballofmud.flink.api.domain.jars.JarRunResponseBody;
 import org.abigballofmud.flink.api.domain.jars.JarUploadResponseBody;
-import org.abigballofmud.flink.api.execeptions.FlinkApiCommonException;
+import org.abigballofmud.flink.api.exceptions.FlinkApiCommonException;
 import org.abigballofmud.flink.api.utils.JSON;
 import org.abigballofmud.flink.api.utils.RestTemplateUtil;
+import org.abigballofmud.flink.api.utils.RetryUtil;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -47,18 +47,25 @@ public class FlinkJarService {
         HttpEntity<String> requestEntity =
                 new HttpEntity<>((JSON.toJson(jarRunRequest)), RestTemplateUtil.applicationJsonHeaders());
         FlinkCluster flinkCluster = apiClient.getFlinkCluster();
-        ResponseEntity<JarRunResponseBody> responseEntity =
-                restTemplate.exchange(flinkCluster.getJobManagerUrl() +
-                                String.format(FlinkApiConstant.Jars.RUN_JAR, jarRunRequest.getJarId()),
-                        HttpMethod.POST, requestEntity, JarRunResponseBody.class);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            JarRunResponseBody data = responseEntity.getBody();
-            log.info("run jar result: {}", data);
-            return data;
-        } else {
-            throw new FlinkApiCommonException(responseEntity.getStatusCode().value(),
-                    String.format("error.flink.jar.run.status, %s", responseEntity.getBody()));
+        try {
+            return RetryUtil.executeWithRetry(() ->
+                            restTemplate.exchange(flinkCluster.getJobManagerUrl() +
+                                            String.format(FlinkApiConstant.Jars.RUN_JAR, jarRunRequest.getJarId()),
+                                    HttpMethod.POST, requestEntity, JarRunResponseBody.class),
+                    3, 1000L, true).getBody();
+        } catch (Exception e) {
+            for (String url : flinkCluster.getJobManagerStandbyUrlSet()) {
+                try {
+                    return RetryUtil.executeWithRetry(() -> restTemplate.exchange(
+                            url + String.format(FlinkApiConstant.Jars.RUN_JAR, jarRunRequest.getJarId()),
+                            HttpMethod.POST, requestEntity, JarRunResponseBody.class),
+                            3, 1000L, true).getBody();
+                } catch (Exception ex) {
+                    // ignore
+                }
+            }
         }
+        throw new FlinkApiCommonException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error.flink.jar.run");
     }
 
 
@@ -76,17 +83,28 @@ public class FlinkJarService {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>(1);
         body.add("file", new FileSystemResource(file));
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, RestTemplateUtil.applicationMultiDataHeaders());
-        ResponseEntity<JarUploadResponseBody> responseEntity =
-                restTemplate.exchange(flinkCluster.getJobManagerUrl() + FlinkApiConstant.Jars.UPLOAD_JAR,
-                        HttpMethod.POST, requestEntity, JarUploadResponseBody.class);
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            JarUploadResponseBody data = responseEntity.getBody();
-            log.info("upload jar result: {}", data);
-            return data;
-        } else {
-            throw new FlinkApiCommonException(responseEntity.getStatusCode().value(),
-                    String.format("error.flink.jar.upload.status, %s", responseEntity.getBody()));
+        try {
+            // 先尝试使用jm 主url，三次失败后使用备用
+            return RetryUtil.executeWithRetry(() ->
+                            restTemplate.exchange(
+                                    flinkCluster.getJobManagerUrl() + FlinkApiConstant.Jars.UPLOAD_JAR,
+                                    HttpMethod.POST, requestEntity, JarUploadResponseBody.class),
+                    3, 1000L, true).getBody();
+        } catch (Exception e) {
+            // 若配置了HA 这里使用备用
+            for (String url : flinkCluster.getJobManagerStandbyUrlSet()) {
+                try {
+                    return RetryUtil.executeWithRetry(() ->
+                                    restTemplate.exchange(
+                                            url + FlinkApiConstant.Jars.UPLOAD_JAR,
+                                            HttpMethod.POST, requestEntity, JarUploadResponseBody.class),
+                            3, 1000L, true).getBody();
+                } catch (Exception ex) {
+                    // ignore
+                }
+            }
         }
+        throw new FlinkApiCommonException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "error.flink.jar.upload");
     }
 
     private boolean checkApiClient(ApiClient apiClient) {

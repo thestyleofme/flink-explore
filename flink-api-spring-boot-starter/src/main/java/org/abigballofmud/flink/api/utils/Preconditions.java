@@ -3,7 +3,7 @@ package org.abigballofmud.flink.api.utils;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import org.abigballofmud.flink.api.execeptions.FlinkApiCommonException;
+import org.abigballofmud.flink.api.exceptions.FlinkApiCommonException;
 import org.springframework.http.HttpStatus;
 
 /**

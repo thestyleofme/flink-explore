@@ -1,6 +1,6 @@
 package org.abigballofmud.flink.api.config;
 
-import org.abigballofmud.flink.api.execeptions.GlobalExceptionHandler;
+import org.abigballofmud.flink.api.exceptions.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

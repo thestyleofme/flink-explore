@@ -2,8 +2,6 @@ package org.abigballofmud.flink.practice.app.udf.filter
 
 import org.abigballofmud.flink.practice.app.constansts.KafkaSourceFrom
 import org.abigballofmud.flink.practice.app.model.SyncConfig
-import org.abigballofmud.flink.practice.app.constansts.KafkaSourceFrom
-import org.abigballofmud.flink.practice.app.model.SyncConfig
 import org.apache.flink.api.common.functions.RichFilterFunction
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode
 

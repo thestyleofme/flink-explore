@@ -14,6 +14,7 @@ import org.abigballofmud.flink.api.client.FlinkCluster;
 public class FlinkApiUtil {
 
     private FlinkApiUtil() {
+        throw new IllegalStateException("util class");
     }
 
     /**
@@ -28,6 +29,10 @@ public class FlinkApiUtil {
         return Preconditions.checkAllNotNull(flinkCluster,
                 flinkCluster.getClusterCode(),
                 flinkCluster.getJobManagerUrl());
+    }
+
+    public void doApi() {
+
     }
 
 }

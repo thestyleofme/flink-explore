@@ -1,4 +1,4 @@
-package org.abigballofmud.flink.api.execeptions;
+package org.abigballofmud.flink.api.exceptions;
 
 import org.abigballofmud.flink.api.domain.ApiResult;
 import org.slf4j.Logger;
