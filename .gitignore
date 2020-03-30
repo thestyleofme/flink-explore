@@ -48,3 +48,4 @@ gen
 hs_err_pid*
 /flink-checkpoints/
 !/src/main/resources/user_behavior.log
+/logs/
