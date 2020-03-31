@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.abigballofmud.flink.api.config.FlinkApiAutoConfiguration,\
-  org.abigballofmud.flink.api.config.GlobalExceptionHandlerAutoConfiguration

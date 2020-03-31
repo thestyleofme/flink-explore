@@ -7,7 +7,7 @@
 
 #### 项目模块简介
 
-- flink-api-spring-boot-starter
+- [flink-api-spring-boot-starter](https://github.com/codingdebugallday/flink-api-spring-boot-starter)
 
         基于flink rest api开发的spring boot starter，可上传/运行jar等一系列操作
 
