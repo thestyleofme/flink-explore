@@ -75,6 +75,16 @@
             <name>hortonworks</name>
             <url>https://repo.hortonworks.com/content/repositories/releases/</url>
         </repository>
+        <repository>
+            <id>ossrh snapshots</id>
+            <name>ossrh snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>ossrh staging</id>
+            <name>ossrh staging</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
     </repositories>
 
 </project>
