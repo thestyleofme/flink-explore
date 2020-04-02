@@ -21,7 +21,7 @@ public class PlatformApplication {
             SpringApplication.run(PlatformApplication.class, args);
         } catch (Exception e) {
             // 防止错误不打印
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 }

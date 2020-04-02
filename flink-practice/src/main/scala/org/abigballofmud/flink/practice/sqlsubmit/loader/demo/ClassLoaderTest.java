@@ -8,8 +8,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.abigballofmud.flink.practice.sqlsubmit.loader.demo.demo1.DiskClassLoader;
 import org.abigballofmud.flink.practice.sqlsubmit.loader.demo.demo1.ExtClasspathLoader;
-import org.abigballofmud.flink.practice.sqlsubmit.loader.demo.demo1.DiskClassLoader;
-import org.abigballofmud.flink.practice.sqlsubmit.loader.demo.demo1.ExtClasspathLoader;
 import org.abigballofmud.flink.practice.sqlsubmit.loader.demo.demo2.JavaCompileClassLoader;
 
 /**

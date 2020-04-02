@@ -20,14 +20,29 @@ spring:
         connection-timeout: 30000
         connection-test-query: SELECT 1
 
+  groovy:
+    template:
+      check-template-location: false
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 300MB
+
+
 mybatis:
   mapperLocations: classpath*:/mapper/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
 
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:hUyhdphl2gXcBDEH5dy}
+
 logging:
   level:
     org.abigballofmud.flink: debug
+    com.github.codingdebugallday.client: debug
     com.baomidou.dynamic: debug
   file:
     name: logs/flink_platform.log

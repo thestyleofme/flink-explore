@@ -76,6 +76,11 @@
             <url>https://repo.hortonworks.com/content/repositories/releases/</url>
         </repository>
         <repository>
+            <id>Jenkins Releases</id>
+            <name>Jenkins Releases Repository</name>
+            <url>https://repo.jenkins-ci.org/releases/</url>
+        </repository>
+        <repository>
             <id>ossrh snapshots</id>
             <name>ossrh snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
