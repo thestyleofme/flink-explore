@@ -27,7 +27,7 @@
     </parent>
 
     <modules>
-        <module>flink-practice</module>
+        <module>flink-app</module>
         <module>flink-platform</module>
         <module>flink-common</module>
     </modules>
