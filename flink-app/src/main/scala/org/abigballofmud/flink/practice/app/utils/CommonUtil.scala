@@ -10,8 +10,6 @@ import com.typesafe.scalalogging.Logger
 import org.abigballofmud.flink.practice.app.SyncApp.gson
 import org.abigballofmud.flink.practice.app.constansts.{CommonConstant, KafkaSourceFrom}
 import org.abigballofmud.flink.practice.app.model.SyncConfig
-import org.abigballofmud.flink.practice.app.constansts.CommonConstant
-import org.abigballofmud.flink.practice.app.model.SyncConfig
 import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.api.java.io.TextInputFormat
@@ -42,10 +40,10 @@ object CommonUtil {
 
   private val log = Logger(LoggerFactory.getLogger(CommonUtil.getClass))
 
-  val UPDATE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPDATE)
-  val INSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.INSERT)
-  val UPSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPSERT)
-  val DELETE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.DELETE)
+  lazy val UPDATE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPDATE)
+  lazy val INSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.INSERT)
+  lazy val UPSERT: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.UPSERT)
+  lazy val DELETE: OutputTag[ObjectNode] = new OutputTag[ObjectNode](CommonConstant.DELETE)
 
   /**
    * 设置初始kafka的offset

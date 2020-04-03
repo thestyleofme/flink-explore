@@ -21,37 +21,30 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UdfDTO implements Serializable {
+public class SqlJobDTO implements Serializable {
 
-    private static final long serialVersionUID = 6221677059094672246L;
+    private static final long serialVersionUID = 2962953322349253698L;
 
-    public static final String FIELD_UDF_ID = "udf_id";
+    public static final String FIELD_UDF_ID = "job_id";
 
-    private Long udfId;
-
+    private Long jobId;
     @NotBlank
-    private String udfName;
-
-    private String udfDesc;
+    private String jobCode;
     /**
-     * jar/code
+     * jm master所在节点的sql上传路径
      */
     @NotBlank
-    private String udfType;
+    private String sqlUploadPath;
 
+    @NotBlank
+    private String clusterCode;
     /**
-     * udf jar上传路径
-     */
-    private String udfJarPath;
-    /**
-     * code: udf代码
-     * jar: class
+     * sql内容
      */
     @NotBlank
     private String content;
-    @NotBlank
-    private String clusterCode;
-    private String udfStatus;
+
+    private String jobStatus;
 
     private Long tenantId;
     private Long objectVersionNumber;
