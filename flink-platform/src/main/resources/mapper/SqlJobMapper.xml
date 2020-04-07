@@ -8,7 +8,11 @@
         <result column="cluster_code" property="clusterCode" jdbcType="VARCHAR"/>
         <result column="sql_upload_path" property="sqlUploadPath" jdbcType="VARCHAR"/>
         <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="savepoint_path" property="savepointPath" jdbcType="VARCHAR"/>
+        <result column="setting_info" property="settingInfo" jdbcType="VARCHAR"/>
+        <result column="flink_job_id" property="flinkJobId" jdbcType="VARCHAR"/>
         <result column="job_status" property="jobStatus" jdbcType="VARCHAR"/>
+        <result column="errors" property="errors" jdbcType="VARCHAR"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
         <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
         <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP"/>

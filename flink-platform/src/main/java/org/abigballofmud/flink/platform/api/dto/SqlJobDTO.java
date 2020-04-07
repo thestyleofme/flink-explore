@@ -35,6 +35,19 @@ public class SqlJobDTO implements Serializable {
      */
     @NotBlank
     private String sqlUploadPath;
+    private String savepointPath;
+    /**
+     * 运行后flink返回的jobid
+     */
+    private String flinkJobId;
+    /**
+     * sql任务的一些额外配置，如：
+     * parallelism : 1
+     * allowNonRestoredState : true
+     * entryClass: ""
+     */
+    private String settingInfo;
+    private String errors;
 
     @NotBlank
     private String clusterCode;
@@ -52,5 +65,14 @@ public class SqlJobDTO implements Serializable {
     private Long createdBy;
     private LocalDateTime lastUpdateDate;
     private Long lastUpdatedBy;
+
+    //===========other===========
+
+    /**
+     * 这里执行flink sql任务需要选取flink_upload_jar里面的jar去执行
+     * flink_upload_jar里面jar的cluster_code以及租户tenant_id必须与sql_job一致
+     * 若是没有传uploadJarId，就去flink_upload_jar找jarCode为_flink_sql_platform的最新的version去执行
+     */
+    private Long uploadJarId;
 
 }

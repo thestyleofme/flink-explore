@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.codingdebugallday.client.api.dto.ClusterDTO;
 import com.github.codingdebugallday.client.infra.context.FlinkApiContext;
+import com.github.codingdebugallday.client.infra.utils.FlinkCommonUtil;
 import com.github.codingdebugallday.client.infra.utils.ThreadPoolUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.abigballofmud.flink.platform.api.dto.UdfDTO;
@@ -71,7 +72,7 @@ public class UdfServiceImpl extends ServiceImpl<UdfMapper, Udf> implements UdfSe
         } else if (udfDTO.getUdfType().equalsIgnoreCase(UdfTypeEnum.JAR.name())) {
             log.info("add udf[{}] by jar", udfDTO.getUdfName());
             // 加载jar包中的udf类 并上传到flink集群
-            File file = CommonUtil.multiPartFileToFile(multipartFile);
+            File file = FlinkCommonUtil.multiPartFileToFile(multipartFile);
             clazz = loadUdfJar(udfDTO, file);
             // 异步将udf jar包上传到集群
             uploadUdfJar(file, udf, clusterDTO);

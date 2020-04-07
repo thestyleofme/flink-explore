@@ -42,7 +42,10 @@ public class SqlJob implements Serializable {
 
     private String clusterCode;
     private String sqlUploadPath;
-
+    private String savepointPath;
+    private String flinkJobId;
+    private String settingInfo;
+    private String errors;
     /**
      * sql内容
      */

@@ -22,4 +22,16 @@ public class CommonConstant {
         public static final String UPLOADING = "UPLOADING";
         public static final String UPLOADED = "UPLOADED";
     }
+
+    /**
+     * 这里存储内置的flink jar
+     * 内置的jarCode都是下划线开头的
+     */
+    public static class JarCode {
+        private JarCode() {
+            throw new IllegalStateException("constant class");
+        }
+
+        public static final String FLINK_SQL_PLATFORM = "_FLINK_SQL_PLATFORM";
+    }
 }

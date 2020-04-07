@@ -54,4 +54,18 @@ public class SqlJobController {
         return sqlJobService.create(sqlJobDTO);
     }
 
+    @PutMapping
+    public SqlJobDTO update(@PathVariable Long tenantId,
+                            @RequestBody @Valid SqlJobDTO sqlJobDTO) {
+        sqlJobDTO.setTenantId(tenantId);
+        return sqlJobService.update(sqlJobDTO);
+    }
+
+    @GetMapping("/execute/{jobId}")
+    public SqlJobDTO execute(@PathVariable Long tenantId,
+                             @PathVariable Long jobId,
+                             @RequestParam(required = false) Long uploadJarId) {
+        return sqlJobService.execute(tenantId, jobId, uploadJarId);
+    }
+
 }

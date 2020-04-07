@@ -17,7 +17,7 @@ import java.util.List;
  * 提交flink sql
  * /data/flink/flink-1.10.0/bin/flink run \
  *  -d -p 1 \
- *  -c org.abigballofmud.flink.sqlsubmit.SqlSubmit \
+ *  -c org.abigballofmud.flink.practice.sqlsubmit.SqlSubmit \
  *  /data/flink/flink-app-1.0-SNAPSHOT-jar-with-dependencies.jar \
  *  -w /data/flink \
  *  -f q1.sql
