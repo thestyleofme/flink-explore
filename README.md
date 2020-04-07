@@ -11,11 +11,11 @@
 
         基于flink rest api开发的spring boot starter，可上传/运行jar等一系列操作
 
-- flink-platform
+- [flink-sql-platform](https://github.com/codingdebugallday/flink-sql-platform)
 
         基于flink-api-spring-boot-starter以及flink sql，可执行sql以及使用jar或代码自动注册各种udf
 
-- flink-app
+- flink-explore
 
         flink常用connector，只需编写json配置即可从mysql/oracle（canal/kafka connector）实时同步到不同sink
 

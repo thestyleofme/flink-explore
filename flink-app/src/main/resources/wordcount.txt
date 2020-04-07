@@ -1,7 +1,0 @@
-hello world
-hello flink
-hello spark
-thank you
-how are you
-and you
-love peace
