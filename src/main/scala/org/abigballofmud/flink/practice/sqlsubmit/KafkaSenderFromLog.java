@@ -10,7 +10,7 @@ import java.util.Objects;
  * <p>
  * 往kafka里灌数据
  * java -cp /data/flink/flink-app-1.0-SNAPSHOT-jar-with-dependencies.jar \
- *  org.abigballofmud.flink.sqlsubmit.KafkaSenderFromLog 1000 \
+ *  org.abigballofmud.flink.practice.sqlsubmit.KafkaSenderFromLog 1000 \
  *  | /usr/hdp/3.1.0.0-78/kafka/bin/kafka-console-producer.sh \
  *  --broker-list hdsp001:6667,hdsp002:6667,hdsp003:6667 \
  *  --topic user_behavior

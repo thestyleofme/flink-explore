@@ -43,6 +43,11 @@
             <artifactId>scala-logging_2.11</artifactId>
             <version>${scala.logging.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+        </dependency>
         <!-- flink-->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -334,11 +339,6 @@
 
         <!-- other-->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.6</version>
@@ -354,6 +354,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- flink 与 hadoop jar冲突 这里以flink的为准-->
+            <dependency>
+                <artifactId>commons-cli</artifactId>
+                <groupId>commons-cli</groupId>
+                <version>${commons-cli.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
@@ -394,21 +400,6 @@
             <id>hortonworks</id>
             <name>hortonworks</name>
             <url>https://repo.hortonworks.com/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>Jenkins Releases</id>
-            <name>Jenkins Releases Repository</name>
-            <url>https://repo.jenkins-ci.org/releases/</url>
-        </repository>
-        <repository>
-            <id>ossrh snapshots</id>
-            <name>ossrh snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>ossrh staging</id>
-            <name>ossrh staging</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </repositories>
 
