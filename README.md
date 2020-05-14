@@ -19,6 +19,10 @@
 
         flink常用connector，只需编写json配置即可从mysql/oracle（canal/kafka connector）实时同步到不同sink
 
+- [user-behavior-analysis](https://github.com/codingdebugallday/user-behavior-analysis)
+
+        flink实战项目--电商用户行为分析
+
 #### 联系我
 
   *  微信: xl283273332
