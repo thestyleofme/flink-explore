@@ -1,0 +1,54 @@
+{
+  "syncFlink": {
+    "jobName": "flink_oracle_realtime_sync",
+    "sourceSchema": "C##KMINER",
+    "sourceTable": "test1",
+    "checkPointPath": "file:///E:/myGitCode/flink-explore/flink-checkpoints/",
+    "writeType": "jdbc"
+  },
+  "sourceKafka": {
+    "kafkaBootstrapServers": "hdspdemo003:6667",
+    "kafkaTopic": "kafka_oracle_test",
+    "initDefaultOffset": "latest",
+    "sourceFrom": "ORACLE_KAFKA_CONNECTOR"
+  },
+  "syncJdbc": {
+    "dbType": "CLICKHOUSE",
+    "driver": "ru.yandex.clickhouse.ClickHouseDriver",
+    "jdbcUrl": "jdbc:clickhouse://172.23.16.68:8123/hdsp",
+    "schema": "hdsp",
+    "table": "test1",
+    "batchInterval": 1,
+    "cols": [
+      {
+        "colName": "id",
+        "colType": "STRING"
+      },
+      {
+        "colName": "name",
+        "colType": "STRING"
+      },
+      {
+        "colName": "sex",
+        "colType": "STRING"
+      },
+      {
+        "colName": "last_update_date",
+        "colType": "DATE"
+      }
+    ],
+    "pk": "id",
+    "insert": {
+      "query": "insert into test1(id,name,sex,last_update_date) values (?,?,?,?)",
+      "colTypes": "VARCHAR, VARCHAR, VARCHAR, VARCHAR"
+    },
+    "update": {
+      "query": "insert into test1(id,name,sex,last_update_date) values (?,?,?,?)",
+      "colTypes": "VARCHAR, VARCHAR, VARCHAR, VARCHAR"
+    },
+    "delete": {
+      "query": "insert into test1(id,name,sex,last_update_date) values (?,?,?,?)",
+      "colTypes": "VARCHAR, VARCHAR, VARCHAR, VARCHAR"
+    }
+  }
+}
