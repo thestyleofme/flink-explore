@@ -147,6 +147,6 @@ select * from hdsp.test1;
 OPTIMIZE TABLE hdsp.test1;
 ```
 
-## 3. 运行flink
+## 2. 运行flink
 
 可本地idea运行，也可打包```mvn clean package -DskipTests```，将jar包在flink集群运行

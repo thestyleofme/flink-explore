@@ -23,6 +23,10 @@
 
         flink实战项目--电商用户行为分析
 
+#### 示例
+
+[flink实时同步oracle数据到clickhouse](docs/sync/oracle-flink-clickhouse.md)
+
 #### 联系我
 
   *  微信: xl283273332

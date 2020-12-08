@@ -47,5 +47,6 @@ case class SyncJdbc(dbType: String,
  */
 case class QueryAndSqlType(query: String,
                            colTypes: String,
+                           ignore: Boolean = false,
                            var sqlTypes: Array[Int]
                           ) extends Serializable

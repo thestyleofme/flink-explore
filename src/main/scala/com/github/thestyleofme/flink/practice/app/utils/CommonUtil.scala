@@ -130,7 +130,7 @@ object CommonUtil {
         } else {
           eventType = value.get("value").get("type").asText()
         }
-        if (Objects.nonNull(syncConfig.syncJdbc.upsert)) {
+        if (Objects.nonNull(syncConfig.syncJdbc.upsert) && !syncConfig.syncJdbc.upsert.ignore) {
           // 配置了replace 两批
           if (eventType.equalsIgnoreCase(CommonConstant.UPDATE) ||
             eventType.equalsIgnoreCase(CommonConstant.INSERT)) {
@@ -138,13 +138,13 @@ object CommonUtil {
           }
         } else {
           // 未配置replace 三批
-          if (eventType.equalsIgnoreCase(CommonConstant.UPDATE)) {
+          if (eventType.equalsIgnoreCase(CommonConstant.UPDATE) && !syncConfig.syncJdbc.update.ignore) {
             ctx.output(UPDATE, value)
-          } else if (eventType.equalsIgnoreCase(CommonConstant.INSERT)) {
+          } else if (eventType.equalsIgnoreCase(CommonConstant.INSERT) && !syncConfig.syncJdbc.insert.ignore) {
             ctx.output(INSERT, value)
           }
         }
-        if (eventType.equalsIgnoreCase(CommonConstant.DELETE)) {
+        if (eventType.equalsIgnoreCase(CommonConstant.DELETE) && !syncConfig.syncJdbc.delete.ignore) {
           ctx.output(DELETE, value)
         } else {
           // 其他
